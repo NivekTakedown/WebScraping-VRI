@@ -8,6 +8,19 @@ import numpy as np
 import requests
 from bs4 import BeautifulSoup
 from markdownify import markdownify as md
+import spacy
+
+# Cargar el modelo de lenguaje en español de spacy
+nlp = spacy.load('es_core_news_md')
+
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+from nltk.corpus import stopwords
+from nltk.stem import SnowballStemmer
+from wordcloud import WordCloud
+from collections import Counter
 
 BASE_WEBSITE = 'https://viceinvestigacion.unal.edu.co'
 ENLACES_EXCLUIR = [
@@ -125,7 +138,63 @@ def guardar_noticias_json():
 
         with open('noticias.json', 'w', encoding='utf-8') as f:
             json.dump(noticias_lista, f, ensure_ascii=False, indent=4)
+    # return json
+        return noticias_lista
 
+# cargar el archivo
+def cargar_noticias_json():
+    with open('noticias.json', 'r', encoding='utf-8') as f:
+        noticias = json.load(f)
+    return noticias
+import matplotlib.pyplot as plt
+
+
+import unidecode
+from nltk.stem import WordNetLemmatizer
+
+def extraer_palabras_importantes(textos: list) -> tuple:
+    # Cargar stopwords
+    stop_words = set(stopwords.words('spanish'))
+    stop_words.update(stopwords.words('english'))
+
+    # Cargar stopwords adicionales desde una URL
+    response = requests.get('https://gist.githubusercontent.com/cr0wg4n/78554c5d0afa9944d2fa3a4435d83a57/raw/df59fb916108f2a58bf1a3d8c62818b44231586d/spanish-stop-words.txt')
+    stop_words_ = response.text.split('\n')
+    stop_words.update(['más','invitar', 'uno','enlace','vicerrectorio','invitar', 'también', 'sólo', 'aquí', 'ahora', 'https','http', 'com', 'co', 'www', 'viceinvestigacion', 'unal', 'edu', 'col', 'html', 'p', 'div', 'class', 'img', 'src'])
+    stop_words.update(['boletin', 'siun', 'atencion', 'legal', 'control', 'interno', 'vicerrectoria', 'enlaces', 'ma', 'hora', 'consultar', 'interes', 'linea', 'preguntas', 'invitamos', 'usuario', 'estadisticas', 'regimen', 'quejas', 'reclamos', 'notificaciones', 'judiciales', 'glosario', 'contratacion', 'rendicion', 'cuentas', 'nota', 'acerca', 'distinta', 'cierre', 'mailto', 'fecha', 'area', 'web', 'pagina', 'registro', 'time', 'modalidad', 'formulario', 'trave', 'application', 'persona', 'mar', 'ma'])
+    # Stop words fechas
+    stop_words.update(['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'])
+    # En inglés
+    stop_words.update(['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'])
+    # Asociado a redes sociales y páginas
+    stop_words.update(['twitter', 'instagram', 'youtube', 'facebook', 'whatsapp', 'linkedin', 'telegram', 'tiktok', 'snapchat', 'pinterest', 'reddit', 'tumblr', 'flickr', 'quora', 'twitch', 'spotify', 'soundcloud','redes','sociales'])
+    # Lugares
+    stop_words.update(['bogota', 'medellin', 'cali', 'barranquilla', 'cartagena', 'cucuta', 'bucaramanga', 'pereira', 'manizales', 'ibague', 'villavicencio', 'neiva', 'pasto', 'tunja', 'popayan', 'quibdo', 'monteria', 'santa marta', 'villavicencio', 'valledupar', 'arauca', 'yopal', 'leticia', 'puerto inirida', 'san jose del guaviare', 'mitu', 'puerto carreño', 'quibdo', 'san andres', 'providencia', 'bogotá', 'medellín', 'cali', 'barranquilla', 'cartagena', 'cúcuta','colombia','universidad','nacional'])
+    stop_words.update(stop_words_)
+
+    palabras_importantes = []
+    for texto in textos:
+        texto = unidecode.unidecode(texto.lower())
+        doc = nlp(texto)
+        palabras = [token.lemma_ for token in doc if token.is_alpha and token.lemma_ not in stop_words and len(token.lemma_) > 3]
+        palabras_importantes.extend(palabras)
+
+    wordcloud = WordCloud(width=800, height=800, background_color='white', stopwords=stop_words, min_font_size=10).generate(' '.join(palabras_importantes))
+
+    palabras_frecuentes = Counter(palabras_importantes).most_common(100)
+
+    return wordcloud, palabras_frecuentes
 
 if __name__ == '__main__':
-    guardar_noticias_json()
+    noticias = cargar_noticias_json()  # Asegúrate de tener esta función definida
+    all_texts = [noticia['texto_contenido'] for noticia in noticias]
+    wordcloud, palabras_frecuentes = extraer_palabras_importantes(all_texts)
+    # Mostrar la nube de palabras
+    plt.figure(figsize=(8, 8), facecolor=None)
+    plt.imshow(wordcloud)
+    plt.axis("off")
+    plt.tight_layout(pad=0)
+    plt.show()
+
+    # Imprimir las 100 palabras más frecuentes
+    print(palabras_frecuentes)
