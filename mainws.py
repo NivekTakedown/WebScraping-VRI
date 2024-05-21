@@ -1,26 +1,29 @@
 import json
 import re
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 from typing import List, Tuple
 
+import matplotlib.pyplot as plt
+import nltk
 import numpy as np
 import requests
-from bs4 import BeautifulSoup
-from markdownify import markdownify as md
 import spacy
+import unidecode
+from bs4 import BeautifulSoup
+from collections import Counter
+from markdownify import markdownify as md
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from wordcloud import WordCloud
 
-# Cargar el modelo de lenguaje en español de spacy
-nlp = spacy.load('es_core_news_md')
-
-import nltk
+# Descargar recursos de NLTK
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
-from nltk.corpus import stopwords
-from nltk.stem import SnowballStemmer
-from wordcloud import WordCloud
-from collections import Counter
+
+# Cargar el modelo de lenguaje en español de spaCy
+nlp = spacy.load('es_core_news_md')
 
 BASE_WEBSITE = 'https://viceinvestigacion.unal.edu.co'
 ENLACES_EXCLUIR = [
@@ -29,6 +32,24 @@ ENLACES_EXCLUIR = [
     "https://ssl.gstatic.com/atari/images/sociallinks/youtube_white_44dp.png",
     "https://ssl.gstatic.com/atari/images/sociallinks/facebook_white_44dp.png"
 ]
+
+BASE_WEBSITE = 'https://viceinvestigacion.unal.edu.co'
+ENLACES_EXCLUIR = [
+    "https://ssl.gstatic.com/atari/images/sociallinks/twitter_white_44dp.png",
+    "https://ssl.gstatic.com/atari/images/sociallinks/instagram_white_44dp.png",
+    "https://ssl.gstatic.com/atari/images/sociallinks/youtube_white_44dp.png",
+    "https://ssl.gstatic.com/atari/images/sociallinks/facebook_white_44dp.png"
+]
+STOPWORDS_ESPANOL = set(stopwords.words('spanish'))
+STOPWORDS_INGLES = set(stopwords.words('english'))
+STOPWORDS_ADICIONALES_URL = 'https://gist.githubusercontent.com/cr0wg4n/78554c5d0afa9944d2fa3a4435d83a57/raw/df59fb916108f2a58bf1a3d8c62818b44231586d/spanish-stop-words.txt'
+STOPWORDS_ADICIONALES = ['más', 'invitar', 'uno', 'enlace', 'vicerrectorio', 'invitar', 'también', 'sólo', 'aquí', 'ahora', 'https', 'http', 'com', 'co', 'www', 'viceinvestigacion', 'unal', 'edu', 'col', 'html', 'p', 'div', 'class', 'img', 'src']
+STOPWORDS_BOLETIN = ['boletin', 'siun', 'atencion', 'legal', 'control', 'interno', 'vicerrectoria', 'enlaces', 'ma', 'hora', 'consultar', 'interes', 'linea', 'preguntas', 'invitamos', 'usuario', 'estadisticas', 'regimen', 'quejas', 'reclamos', 'notificaciones', 'judiciales', 'glosario', 'contratacion', 'rendicion', 'cuentas', 'nota', 'acerca', 'distinta', 'cierre', 'mailto', 'fecha', 'area', 'web', 'pagina', 'registro', 'time', 'modalidad', 'formulario', 'trave', 'application', 'persona', 'mar', 'ma']
+STOPWORDS_FECHAS_ESPANOL = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+STOPWORDS_FECHAS_INGLES = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+STOPWORDS_REDES_SOCIALES = ['twitter', 'instagram', 'youtube', 'facebook', 'whatsapp', 'linkedin', 'telegram', 'tiktok', 'snapchat', 'pinterest', 'reddit', 'tumblr', 'flickr', 'quora', 'twitch', 'spotify', 'soundcloud', 'redes', 'sociales']
+STOPWORDS_LUGARES = ['bogota', 'medellin', 'cali', 'barranquilla', 'cartagena', 'cucuta', 'bucaramanga', 'pereira', 'manizales', 'ibague', 'villavicencio', 'neiva', 'pasto', 'tunja', 'popayan', 'quibdo', 'monteria', 'santa marta', 'villavicencio', 'valledupar', 'arauca', 'yopal', 'leticia', 'puerto inirida', 'san jose del guaviare', 'mitu', 'puerto carreño', 'quibdo', 'san andres', 'providencia', 'bogotá', 'medellín', 'cali', 'barranquilla', 'cartagena', 'cúcuta', 'colombia', 'universidad', 'nacional']
+
 
 class NoticiasExtractor:
     def __init__(self, session):
@@ -146,30 +167,20 @@ def cargar_noticias_json():
     with open('noticias.json', 'r', encoding='utf-8') as f:
         noticias = json.load(f)
     return noticias
-import matplotlib.pyplot as plt
-
-
-import unidecode
-from nltk.stem import WordNetLemmatizer
 
 def extraer_palabras_importantes(textos: list) -> tuple:
     # Cargar stopwords
-    stop_words = set(stopwords.words('spanish'))
-    stop_words.update(stopwords.words('english'))
+    stop_words = STOPWORDS_ESPANOL.union(STOPWORDS_INGLES)
 
     # Cargar stopwords adicionales desde una URL
-    response = requests.get('https://gist.githubusercontent.com/cr0wg4n/78554c5d0afa9944d2fa3a4435d83a57/raw/df59fb916108f2a58bf1a3d8c62818b44231586d/spanish-stop-words.txt')
+    response = requests.get(STOPWORDS_ADICIONALES_URL)
     stop_words_ = response.text.split('\n')
-    stop_words.update(['más','invitar', 'uno','enlace','vicerrectorio','invitar', 'también', 'sólo', 'aquí', 'ahora', 'https','http', 'com', 'co', 'www', 'viceinvestigacion', 'unal', 'edu', 'col', 'html', 'p', 'div', 'class', 'img', 'src'])
-    stop_words.update(['boletin', 'siun', 'atencion', 'legal', 'control', 'interno', 'vicerrectoria', 'enlaces', 'ma', 'hora', 'consultar', 'interes', 'linea', 'preguntas', 'invitamos', 'usuario', 'estadisticas', 'regimen', 'quejas', 'reclamos', 'notificaciones', 'judiciales', 'glosario', 'contratacion', 'rendicion', 'cuentas', 'nota', 'acerca', 'distinta', 'cierre', 'mailto', 'fecha', 'area', 'web', 'pagina', 'registro', 'time', 'modalidad', 'formulario', 'trave', 'application', 'persona', 'mar', 'ma'])
-    # Stop words fechas
-    stop_words.update(['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'])
-    # En inglés
-    stop_words.update(['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'])
-    # Asociado a redes sociales y páginas
-    stop_words.update(['twitter', 'instagram', 'youtube', 'facebook', 'whatsapp', 'linkedin', 'telegram', 'tiktok', 'snapchat', 'pinterest', 'reddit', 'tumblr', 'flickr', 'quora', 'twitch', 'spotify', 'soundcloud','redes','sociales'])
-    # Lugares
-    stop_words.update(['bogota', 'medellin', 'cali', 'barranquilla', 'cartagena', 'cucuta', 'bucaramanga', 'pereira', 'manizales', 'ibague', 'villavicencio', 'neiva', 'pasto', 'tunja', 'popayan', 'quibdo', 'monteria', 'santa marta', 'villavicencio', 'valledupar', 'arauca', 'yopal', 'leticia', 'puerto inirida', 'san jose del guaviare', 'mitu', 'puerto carreño', 'quibdo', 'san andres', 'providencia', 'bogotá', 'medellín', 'cali', 'barranquilla', 'cartagena', 'cúcuta','colombia','universidad','nacional'])
+    stop_words.update(STOPWORDS_ADICIONALES)
+    stop_words.update(STOPWORDS_BOLETIN)
+    stop_words.update(STOPWORDS_FECHAS_ESPANOL)
+    stop_words.update(STOPWORDS_FECHAS_INGLES)
+    stop_words.update(STOPWORDS_REDES_SOCIALES)
+    stop_words.update(STOPWORDS_LUGARES)
     stop_words.update(stop_words_)
 
     palabras_importantes = []
@@ -185,10 +196,35 @@ def extraer_palabras_importantes(textos: list) -> tuple:
 
     return wordcloud, palabras_frecuentes
 
+
+def categorizar_noticias(noticias: List[dict], palabras_frecuentes: List[Tuple[str, int]]) -> List[dict]:
+    top_palabras = [palabra for palabra, _ in palabras_frecuentes[:10]]
+
+    for noticia in noticias:
+        texto = unidecode.unidecode(noticia['texto_contenido'].lower())
+        doc = nlp(texto)#q? qu hace esta linea de codigo: esta linea de codigo lo que hace es tokenizar el texto y lematizarlo 
+        palabras = [token.lemma_ for token in doc if token.is_alpha]
+        # sacar las categorias contando las palabras que se encuentran en el texto y que estan en la lista de palabras mas frecuentes, asigna las 3 que mas aparecen
+        categorias = [palabra for palabra in top_palabras if palabra in palabras]
+        # asignar las categorias a la noticia las que mas se repiten sin que se repitan y por orden de cantidad de aparicion de mayor a menor
+        noticia['categorias'] = list(set(categorias))
+    return noticias
+
+
+# Ejecución principal
 if __name__ == '__main__':
+    guardar_noticias_json()
     noticias = cargar_noticias_json()  # Asegúrate de tener esta función definida
     all_texts = [noticia['texto_contenido'] for noticia in noticias]
     wordcloud, palabras_frecuentes = extraer_palabras_importantes(all_texts)
+
+    # Categorizar noticias
+    noticias_categorizadas = categorizar_noticias(noticias, palabras_frecuentes)
+
+    # Guardar noticias categorizadas en un nuevo archivo JSON
+    with open('noticias_categorizadas.json', 'w', encoding='utf-8') as f:
+        json.dump(noticias_categorizadas, f, ensure_ascii=False, indent=4)
+
     # Mostrar la nube de palabras
     plt.figure(figsize=(8, 8), facecolor=None)
     plt.imshow(wordcloud)
