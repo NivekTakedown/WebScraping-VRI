@@ -85,6 +85,8 @@ class NoticiasExtractor:
 
     def bajar_texto_noticias(self, enlaces: List[str]) -> List[dict]:
         noticias_lista = []
+        #enlaces = enlaces[:5]  # Limitar la cantidad de enlaces para pruebas
+        enlaces = enlaces[:1]  # Limitar la cantidad de enlaces para pruebas
         for enlace in enlaces:
             print(f"Enlace: {enlace}")
             website = f"{BASE_WEBSITE}{enlace}"
@@ -101,25 +103,36 @@ class NoticiasExtractor:
                         return texto
                     return None
 
-                def agregar_info_text(clase: str) -> str:
-                    elementos = soup.find_all("div", class_=clase)
-                    if elementos:
-                        texto = ' '.join(elemento.get_text(separator=' ', strip=True) for elemento in elementos)
-                        return texto
-                    return None
-
                 def extraer_fecha(texto: str, patron_fecha: str) -> str:
                     fechas = re.findall(patron_fecha, texto)
                     return fechas[0] if fechas else None
-
+                # crea un metodo para ver si un substring esta en el texto y si esta lo retorna true
+                def buscar_substring(texto: str, subcadena: str) -> bool:
+                    return texto.startswith(subcadena)
+     
                 texto_completo = agregar_info("tyJCtd mGzaTb Depvyb baZpAe")
-                noticias_info['texto_contenido'] = md(texto_completo)
-                noticias_info['titulo'] = agregar_info_text("tyJCtd mGzaTb Depvyb baZpAe lkHyyc")
-                noticias_info['fecha'] = extraer_fecha(texto_completo, r"\d{4}/\d{2}/\d{2}")
-                fecha_actualizacion = extraer_fecha(texto_completo, r"Nota actualizada el (\d{1,2} \w{3}\. \d{4})")
-                noticias_info['fecha_actualizacion'] = f"Nota actualizada el {fecha_actualizacion}" if fecha_actualizacion else None
-                fecha_evento = extraer_fecha(texto_completo, r"\[Boletín SIUN \d+, (\d{1,2}/\d{1,2} de \w+ de \d{4})\]")
-                noticias_info['fecha_del_evento'] = f"[Boletín SIUN {fecha_evento}" if fecha_evento else None
+                if texto_completo:
+                    fecha_evento = extraer_fecha(texto_completo, r"\[Boletín SIUN \d+, (\d{1,2}/\d{1,2} de \w+ de \d{4})\]")
+                    texto_completo_md = md(texto_completo).split('\n\n',1)
+                    titulo = texto_completo_md[0]
+                    texto_completo_md = texto_completo_md[1].split('\n\n Te invitamos a consultar nuestras redes sociales')[0].split("Investigación, UNAL\n\n")[1]
+                    fecha_actualizacion = None
+                    # si empieza con: Nota actualizada... se sivide enn dos y se toma el segundo elemento
+                    if buscar_substring(texto_completo_md, " Nota actualizada el "):
+                        texto_completo_md = texto_completo_md.split('\n\n',1)
+                        fecha_actualizacion = texto_completo_md[0]
+                        texto_completo_md = texto_completo_md[1]
+                    noticias_info['texto_contenido'] = texto_completo_md
+                    noticias_info['titulo'] = titulo
+                    noticias_info['fecha'] = md(texto_completo).split('\n\n',2)[1]
+                    noticias_info['fecha_actualizacion'] = f"Nota actualizada el {fecha_actualizacion}" if fecha_actualizacion else None
+                    noticias_info['fecha_del_evento'] = f"[Boletín SIUN {fecha_evento}]" if fecha_evento else None
+                else:
+                    noticias_info['texto_contenido'] = None
+                    noticias_info['titulo'] = None
+                    noticias_info['fecha'] = None
+                    noticias_info['fecha_actualizacion'] = None
+                    noticias_info['fecha_del_evento'] = None
 
                 # Filtrar los enlaces
                 enlaces_imagenes, enlaces_otros = self.extraer_enlaces(soup, "tyJCtd baZpAe")
@@ -193,12 +206,13 @@ def extraer_palabras_importantes(textos: list) -> tuple:
     wordcloud = WordCloud(width=800, height=800, background_color='white', stopwords=stop_words, min_font_size=10).generate(' '.join(palabras_importantes))
 
     palabras_frecuentes = Counter(palabras_importantes).most_common(100)
-
+    with open('palabras_frecuentes.json', 'w', encoding='utf-8') as f:
+        json.dump(palabras_frecuentes, f, ensure_ascii=False, indent=4)
     return wordcloud, palabras_frecuentes
 
 
 def categorizar_noticias(noticias: List[dict], palabras_frecuentes: List[Tuple[str, int]]) -> List[dict]:
-    top_palabras = [palabra for palabra, _ in palabras_frecuentes[:10]]
+    top_palabras = [palabra for palabra, _ in palabras_frecuentes]
 
     for noticia in noticias:
         texto = unidecode.unidecode(noticia['texto_contenido'].lower())
@@ -207,30 +221,28 @@ def categorizar_noticias(noticias: List[dict], palabras_frecuentes: List[Tuple[s
         # sacar las categorias contando las palabras que se encuentran en el texto y que estan en la lista de palabras mas frecuentes, asigna las 3 que mas aparecen
         categorias = [palabra for palabra in top_palabras if palabra in palabras]
         # asignar las categorias a la noticia las que mas se repiten sin que se repitan y por orden de cantidad de aparicion de mayor a menor
-        noticia['categorias'] = list(set(categorias))
+        noticia['categorias'] = list(set(categorias))[:3]
     return noticias
 
+# cargar palabras importantes
+def cargar_palabras_frecuentes_json():
+    with open('palabras_frecuentes.json', 'r', encoding='utf-8') as f:
+        palabras_frecuentes = json.load(f)
+    return palabras_frecuentes
 
 # Ejecución principal
 if __name__ == '__main__':
     guardar_noticias_json()
     noticias = cargar_noticias_json()  # Asegúrate de tener esta función definida
     all_texts = [noticia['texto_contenido'] for noticia in noticias]
-    wordcloud, palabras_frecuentes = extraer_palabras_importantes(all_texts)
-
+    #wordcloud, palabras_frecuentes = extraer_palabras_importantes(all_texts)
+    palabras_frecuentes= cargar_palabras_frecuentes_json()
     # Categorizar noticias
     noticias_categorizadas = categorizar_noticias(noticias, palabras_frecuentes)
 
     # Guardar noticias categorizadas en un nuevo archivo JSON
     with open('noticias_categorizadas.json', 'w', encoding='utf-8') as f:
         json.dump(noticias_categorizadas, f, ensure_ascii=False, indent=4)
-
-    # Mostrar la nube de palabras
-    plt.figure(figsize=(8, 8), facecolor=None)
-    plt.imshow(wordcloud)
-    plt.axis("off")
-    plt.tight_layout(pad=0)
-    plt.show()
 
     # Imprimir las 100 palabras más frecuentes
     print(palabras_frecuentes)
