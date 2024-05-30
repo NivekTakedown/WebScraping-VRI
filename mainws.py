@@ -73,17 +73,18 @@ STOPWORDS_LUGARES = [
     'puerto carreño', 'quibdo', 'san andres', 'providencia', 'bogotá', 'medellín',
     'cali', 'barranquilla', 'cartagena', 'cúcuta', 'colombia', 'universidad', 'nacional'
 ]
+def get_tag(item):
+    return item['id'],item['label'].lower()
+
+
 def get_tags():
-    url = 'https://web.unal.edu.co/vicerrectoria/investigacion-cms/api/tags-posts'
+    url = 'https://web.unal.edu.co/vicerrectoria/investigacion-cms/api/tags-posts?populate=custom,10,id&pagination[pageSize]=100'
     response = requests.get(url)
-    data = response.json()['data']
+    data = response.json()['customData']
 
     # Usa map para aplicar get_tag a cada elemento en data
-    tags = list(map(get_tag, data))
+    tags = set(map(get_tag, data))
     return tags
-
-def get_tag(item):
-    return item['id'],item['attributes']['label']
 
 def download_image(url, filename):
     response = requests.get(url)
@@ -139,7 +140,7 @@ class NoticiasExtractor:
     def bajar_texto_noticias(self, enlaces: List[str]) -> List[dict]:
         noticias_lista = []
         # enlaces = enlaces[:5]  # Limitar la cantidad de enlaces para pruebas
-        enlaces = enlaces[:1]  # Limitar la cantidad de enlaces para pruebas
+        enlaces = enlaces  # Limitar la cantidad de enlaces para pruebas
         for enlace in enlaces:
             print(f"Enlace: {enlace}")
             website = f"{BASE_WEBSITE}{enlace}"
