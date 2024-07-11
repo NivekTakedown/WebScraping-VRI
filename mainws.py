@@ -3,7 +3,6 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import List, Tuple, Optional
-
 import matplotlib.pyplot as plt
 import nltk
 import numpy as np
@@ -15,6 +14,9 @@ from collections import Counter
 from markdownify import markdownify as md
 from nltk.corpus import stopwords
 from wordcloud import WordCloud
+import aiohttp
+import asyncio
+
 
 # Descargar recursos de NLTK
 nltk.download('punkt')
@@ -73,6 +75,8 @@ STOPWORDS_LUGARES = [
     'puerto carreño', 'quibdo', 'san andres', 'providencia', 'bogotá', 'medellín',
     'cali', 'barranquilla', 'cartagena', 'cúcuta', 'colombia', 'universidad', 'nacional'
 ]
+
+
 def get_tag(item):
     return item['id'],item['label'].lower()
 
@@ -86,48 +90,52 @@ def get_tags():
     tags = set(map(get_tag, data))
     return tags
 
-def download_image(url, filename):
-    response = requests.get(url)
-    filename = 'imagenes/' + filename + response.headers['Content-Type'].split('/')[-1]
-    with open(filename, 'wb') as f:
-        f.write(response.content)
-    return filename  # Devuelve el nombre del archivo
+
+async def download_images(noticias):
+    filenames = []
+    async with aiohttp.ClientSession() as session:
+        for noticia in noticias:
+            if noticia['enlaces_imagenes']:
+                for i, url in enumerate(noticia['enlaces_imagenes']):
+                    filename = f'{noticia["enlace"]}_{i}.'
+                    filename = await download_image(session, url, filename)
+                    filenames.append(filename)
+                    await asyncio.sleep(0.1)
+    return filenames
 
 
-def download_images(noticias):
-    filenames = []  # Inicializa una lista vacía para almacenar los nombres de los archivos
-    for noticia in noticias:
-        if noticia['enlaces_imagenes'] != []:
-            for i, url in enumerate(noticia['enlaces_imagenes']):
-                filename = f'{noticia["enlace"]}_{i}.'
-                filename = download_image(url, filename)  # Guarda el nombre del archivo devuelto
-                filenames.append(filename)  # Agrega el nombre del archivo a la lista
-                time.sleep(0.1)
-    return filenames  # Devuelve la lista de nombres de archivos al final
+async def download_image(session, url, filename):
+    async with session.get(url) as response:
+        filename = 'imagenes/' + filename + response.headers['Content-Type'].split('/')[-1]
+        with open(filename, 'wb') as f:
+            f.write(await response.read())
+    return filename
 
 
 class NoticiasExtractor:
     def __init__(self, session):
         self.session = session
 
-    def filtrar_enlaces(self) -> List[str]:
+    async def filtrar_enlaces(self) -> List[str]:
         website = f'{BASE_WEBSITE}/investigación'
         try:
-            response = self.session.get(website)
-            response.raise_for_status()
-            soup = BeautifulSoup(response.text, 'lxml')
-            enlaces = soup.find_all('a', class_='aJHbb hDrhEe HlqNPb')
-            enlaces_filtrados = [
-                enlace['href'] for enlace in enlaces
-                if '/investigación/apoyo-a-la-investigación/boletín-siun' in enlace['href']
-                   and len(enlace['href']) > 56
-            ]
-            return enlaces_filtrados
-        except requests.RequestException as e:
+            async with self.session.get(website) as response:
+                response.raise_for_status()
+                html_content = await response.text()
+                soup = BeautifulSoup(html_content, 'lxml')
+                enlaces = soup.find_all('a', class_='aJHbb hDrhEe HlqNPb')
+                enlaces_filtrados = [
+                    enlace['href'] for enlace in enlaces
+                    if '/investigación/apoyo-a-la-investigación/boletín-siun' in enlace['href']
+                    and len(enlace['href']) > 56
+                ]
+                return enlaces_filtrados
+        except aiohttp.ClientError as e:
             print(f"Error al obtener la página web: {e}")
             return []
-
-    
+        except Exception as e:
+            print(f"Un error ocurrió: {e}")
+            return []
 
     def extraer_enlaces(self, soup: BeautifulSoup, clase: str) -> Tuple[List[str], List[str]]:
         elementos = soup.find_all("div", class_=clase)
@@ -137,84 +145,92 @@ class NoticiasExtractor:
         #print(f"Enlaces de otros: {enlaces_otros} \n")
         return enlaces_imagenes, enlaces_otros
 
-    def bajar_texto_noticias(self, enlaces: List[str]) -> List[dict]:
+    async def bajar_texto_noticias(self, enlaces: List[str]) -> List[dict]:
         noticias_lista = []
-        # enlaces = enlaces[:5]  # Limitar la cantidad de enlaces para pruebas
-        enlaces = enlaces  # Limitar la cantidad de enlaces para pruebas
-        for enlace in enlaces:
-            print(f"Enlace: {enlace}")
-            website = f"{BASE_WEBSITE}{enlace}"
-            noticias_info = {}
-            try:
-                response = self.session.get(website)
-                response.raise_for_status()
-                soup = BeautifulSoup(response.text, 'lxml')
+        enlaces = enlaces[:1]  # Limitar la cantidad de enlaces para pruebas
+        async with aiohttp.ClientSession() as session:
+            for enlace in enlaces:
+                print(f"Enlace: {enlace}")
+                website = f"{BASE_WEBSITE}{enlace}"
+                noticias_info = {}
+                try:
+                    async with session.get(website) as response:
+                        response.raise_for_status()
+                        soup = BeautifulSoup(await response.text(), 'lxml')
 
-                def agregar_info(clase: str) -> str:
-                    elementos = soup.find_all("div", class_=clase)
-                    if elementos:
-                        texto = ' '.join(str(elemento) for elemento in elementos)
-                        return texto
-                    return None
+                    def agregar_info(clase: str) -> str:
+                        elementos = soup.find_all("div", class_=clase)
+                        if elementos:
+                            texto = ' '.join(str(elemento) for elemento in elementos)
+                            return texto
+                        return None
 
-                def extraer_fecha(texto: str, patron_fecha: str) -> str:
-                    fechas = re.findall(patron_fecha, texto)
-                    return fechas[0] if fechas else None
+                    def extraer_fecha(texto: str, patron_fecha: str) -> str:
+                        fechas = re.findall(patron_fecha, texto)
+                        return fechas[0] if fechas else None
 
-                def buscar_substring(texto: str, subcadena: str) -> bool:
-                    return texto.startswith(subcadena)
+                    def buscar_substring(texto: str, subcadena: str) -> bool:
+                        return texto.startswith(subcadena)
+                    
+                    async def send_content_as_post_request(content):
+                        url = 'http://localhost:3000/process_html'
+                        headers = {'Content-Type': 'text/html'}
+                        async with aiohttp.ClientSession() as session:
+                            async with session.post(url, data=content, headers=headers) as response:
+                                return await response.json()
 
-                texto_completo = agregar_info("tyJCtd mGzaTb Depvyb baZpAe")
-                if texto_completo:
-                    texto_completo_md = md(texto_completo).split('\n\n', 1)
-                    titulo = texto_completo_md[0]
-                    texto_completo_md = \
-                    texto_completo_md[1].split('\n\n Te invitamos a consultar nuestras redes sociales')[0].split(
-                        "Investigación, UNAL\n\n")[1]
-                    fecha_actualizacion = None
-                    if buscar_substring(texto_completo_md, " Nota actualizada el "):
-                        texto_completo_md = texto_completo_md.split('\n\n', 1)
-                        fecha_actualizacion = texto_completo_md[0]
-                        texto_completo_md = texto_completo_md[1]
-                    fecha_cierre = None
-                    if buscar_substring(texto_completo_md, " Cierre: "):
-                        texto_completo_md = texto_completo_md.split('\n\n', 1)
-                        fecha_cierre = texto_completo_md[0]
-                        texto_completo_md = texto_completo_md[1]
-                    fecha_evento=None
+                    texto_completo = agregar_info("tyJCtd mGzaTb Depvyb baZpAe")
+                    if texto_completo:
+                        texto_completo_md = md(texto_completo).split('\n\n', 1)
+                        titulo = texto_completo_md[0]
+                        texto_completo_md = texto_completo_md[1].split('\n\n Te invitamos a consultar nuestras redes sociales')[0].split("Investigación, UNAL\n\n")[1]
+                        fecha_actualizacion = None
+                        
+                        if buscar_substring(texto_completo_md, " Nota actualizada el "):
+                            texto_completo_md = texto_completo_md.split('\n\n', 1)
+                            fecha_actualizacion = texto_completo_md[0]
+                            texto_completo_md = texto_completo_md[1]
+                        fecha_cierre = None
+                        if buscar_substring(texto_completo_md, " Cierre: "):
+                            texto_completo_md = texto_completo_md.split('\n\n', 1)
+                            fecha_cierre = texto_completo_md[0]
+                            texto_completo_md = texto_completo_md[1]
+                        fecha_evento = None
+                        texto_completo_md = texto_completo_md.rsplit('\n\n', 1)
+                        fecha_evento = texto_completo_md[1]
+                        texto_completo_md = texto_completo_md[0]
+                        noticias_info['texto_contenido'] = texto_completo_md
+                        
+                        noticias_info['shortDescription'] = texto_completo_md[:150]
+                        noticias_info['title'] = titulo
+                        noticias_info['fecha'] = md(texto_completo).split('\n\n', 2)[1]
+                        noticias_info['fecha_cierre'] = fecha_cierre if fecha_cierre else None
+                        noticias_info['fecha_actualizacion'] = f"Nota actualizada el {fecha_actualizacion}" if fecha_actualizacion else None
+                        noticias_info['fecha_del_evento'] = fecha_evento if fecha_evento else None
+                        noticias_info['enlace'] = enlace.rsplit('/', 1)[1].capitalize()
+                        noticias_info['subtitle'] = enlace.rsplit('/', 1)[1].replace('-', ' ').capitalize()
+                        #noticias_info['texto_contenido'] = noticias_info['texto_contenido'].replace('\n','&nbsp')
+                        noticias_info['texto_contenido_blocks'] = await send_content_as_post_request(noticias_info['texto_contenido'])
+                        #noticias_info['shortDescription'] = noticias_info['shortDescription'].replace('\n','&nbsp')
+                    else:
+                        noticias_info['texto_contenido'] = None
+                        noticias_info['titulo'] = None
+                        noticias_info['fecha'] = None
+                        noticias_info['fecha_actualizacion'] = None
+                        noticias_info['fecha_del_evento'] = None
+                        noticias_info['enlace'] = enlace
 
-                    texto_completo_md = texto_completo_md.rsplit('\n\n', 1)
-                    fecha_evento = texto_completo_md[1]
-                    texto_completo_md = texto_completo_md[0]
-                    noticias_info['texto_contenido'] = texto_completo_md
-                    noticias_info['shortDescription'] = texto_completo_md[:150]
-                    noticias_info['title'] = titulo
-                    noticias_info['fecha'] = md(texto_completo).split('\n\n', 2)[1]
-                    noticias_info['fecha_cierre'] = fecha_cierre if fecha_cierre else None
-                    noticias_info[
-                        'fecha_actualizacion'] = f"Nota actualizada el {fecha_actualizacion}" if fecha_actualizacion else None
-                    noticias_info['fecha_del_evento'] = fecha_evento if fecha_evento else None
-                    noticias_info['enlace'] = enlace.rsplit('/', 1)[1].capitalize()
-                    noticias_info['subtitle'] = enlace.rsplit('/', 1)[1].replace('-', ' ').capitalize()
-                else:
-                    noticias_info['texto_contenido'] = None
-                    noticias_info['titulo'] = None
-                    noticias_info['fecha'] = None
-                    noticias_info['fecha_actualizacion'] = None
-                    noticias_info['fecha_del_evento'] = None
-                    noticias_info['enlace'] = enlace
+                    enlaces_imagenes, enlaces_otros = self.extraer_enlaces(soup, "tyJCtd baZpAe")
+                    noticias_info['enlaces_imagenes'] = list(
+                        set(enlace for enlace in enlaces_imagenes if enlace not in ENLACES_EXCLUIR))
+                    noticias_info['images'] = await download_images([noticias_info])
+                    noticias_lista.append(noticias_info)
+                    await asyncio.sleep(0.1)
 
-                enlaces_imagenes, enlaces_otros = self.extraer_enlaces(soup, "tyJCtd baZpAe")
-                noticias_info['enlaces_imagenes'] = list(
-                    set(enlace for enlace in enlaces_imagenes if enlace not in ENLACES_EXCLUIR))
-                noticias_info['images'] = download_images([noticias_info])
-                noticias_lista.append(noticias_info)
-                time.sleep(0.1)
-
-            except requests.RequestException as e:
-                print(f"Error al obtener la página web: {e}")
-            except Exception as e:
-                print(f"Un error ocurrió: {e}")
+                except aiohttp.ClientError as e:
+                    print(f"Error al obtener la página web: {e}")
+                except Exception as e:
+                    print(f"Un error ocurrió: {e}")
 
         return noticias_lista
 
@@ -286,18 +302,16 @@ class AnalizadorTextos:
         return noticias
 
 
-def main():
-    with requests.Session() as session:
+async def main():
+    async with aiohttp.ClientSession() as session:
         extractor = NoticiasExtractor(session)
-        enlaces = extractor.filtrar_enlaces()
+        enlaces = await extractor.filtrar_enlaces()  # Añade 'await' aquí
 
-        num_hilos = 5
-        enlaces_divididos = np.array_split(enlaces, num_hilos)
+        num_coroutines = 5
+        enlaces_divididos = np.array_split(enlaces, num_coroutines)
 
-        with ThreadPoolExecutor(max_workers=num_hilos) as executor:
-            futures = [executor.submit(extractor.bajar_texto_noticias, enlaces_parte) for enlaces_parte in
-                       enlaces_divididos]
-            resultados = [future.result() for future in futures]
+        tareas = [extractor.bajar_texto_noticias(enlaces_parte) for enlaces_parte in enlaces_divididos]
+        resultados = await asyncio.gather(*tareas)
 
         noticias_lista = [noticia for resultado in resultados for noticia in resultado]
 
@@ -305,9 +319,6 @@ def main():
 
     noticias = JSONHandler.cargar_noticias_json()
     all_texts = [noticia['texto_contenido'] for noticia in noticias]
-
-    # Uncomment the following lines if you want to generate the wordcloud and extract words again
-    # wordcloud, palabras_frecuentes = AnalizadorTextos.extraer_palabras_importantes(all_texts)
 
     palabras_frecuentes = list(map(lambda x: [x[1],x[0]], get_tags()))
     noticias_categorizadas = AnalizadorTextos.categorizar_noticias(noticias, palabras_frecuentes)
@@ -317,6 +328,5 @@ def main():
 
     print(palabras_frecuentes)
 
-
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())

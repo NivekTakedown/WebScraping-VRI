@@ -9,75 +9,947 @@
         "fecha_del_evento": " [Boletín SIUN 658, 23/24 de noviembre de 2023] ",
         "enlace": "Capacitación-permisos-biodiversidad-unal-medellín-20231206",
         "subtitle": "Capacitación permisos biodiversidad unal medellín 20231206",
+        "texto_contenido_blocks": {
+            "type": "doc",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "La Vicerrectoría de Investigación y la Dirección de Investigación y Extensión de la sede Medellín de la Universidad Nacional de Colombia informan que la capacitación presencial sobre permisos de investigación en diversidad biológica programada para el miércoles, 6 de diciembre de 2023 en la UNAL sede Medellín fue cancelada y se reprogramará para febrero de 2024."
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Más información: "
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "mailto:perminambiente@unal.edu.co",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "perminambiente@unal.edu.co"
+                        },
+                        {
+                            "type": "text",
+                            "text": "."
+                        }
+                    ]
+                }
+            ]
+        },
         "enlaces_imagenes": [],
         "images": []
     },
     {
-        "texto_contenido": " El 11 mar. 2024 por Zoom y Facebook Live\n\n Conferencistas: Claudia Vaca González, directora del Centro de Pensamiento «Medicamentos, Información y Poder» de la UNAL y profesora asociada del Departamento de Farmacia de la Facultad de Ciencias de la sede Bogotá; José Daniel Rengifo Martínez, abogado de la UNAL y magíster en Biociencias y Derecho\n\nFecha y hora: lunes, 11 de marzo de 2024, 11:00 hora colombiana\n\nConexión a través de Zoom (ID 827 4132 4844; contraseña: SISP2023) y transmisión por Facebook Live [@SISaludPublica](https://www.facebook.com/SISaludPublica/live_videos)\n\nEl Seminario Internacional de Salud Pública es un evento en línea creado por un grupo internacional de profesionales de la salud, con la finalidad de generar un espacio de diálogo que fomente la transmisión de experiencias y conocimientos en el área de la salud pública. Las sesiones se realizan los lunes cada dos semanas, con temas diversos orientados al abordaje de problemas en salud desde la óptica de la salud pública.\n\n La Vicerrectoría de Investigación no tiene más información acerca de este evento distinta a la publicada en los enlaces de esta nota.",
-        "shortDescription": " El 11 mar. 2024 por Zoom y Facebook Live\n\n Conferencistas: Claudia Vaca González, directora del Centro de Pensamiento «Medicamentos, Información y Po",
-        "title": "«Propiedad intelectual y equidad en la salud» (parte del Seminario Internacional de Salud Pública 2024)",
-        "fecha": " 2024/03/07 / Boletín SIUN, Vicerrectoría de Investigación, UNAL",
+        "texto_contenido": " El 23 abr. 2024 de forma presencial en el Campus La Nubia\n\n Fecha y hora: martes, 23 de abril de 2024, 08:00-12:00\n\nLugar: Auditorio S1, Campus La Nubia, Universidad Nacional de Colombia sede Manizales, Manizales, Caldas, Colombia\n\n[[Consultar el documento de estrategia de internacionalización de la investigación, creación artística e innovación UNAL 2024-2034](/investigación/apoyo-a-la-investigación/internacionalizacion-estrategia)]\n\nEvento presencial [[Formulario de inscripción](https://forms.gle/L4qxfPJDcMK7qPrB6)]\n\n La Vicerrectoría de Investigación no tiene más información acerca de esta actividad distinta a la publicada en los enlaces de esta nota.",
+        "shortDescription": " El 23 abr. 2024 de forma presencial en el Campus La Nubia\n\n Fecha y hora: martes, 23 de abril de 2024, 08:00-12:00\n\nLugar: Auditorio S1, Campus La Nu",
+        "title": "Capacitación en diplomacia científica, abril 2024 (UNAL sede Manizales)",
+        "fecha": " 2024/04/16 / Boletín SIUN, Vicerrectoría de Investigación, UNAL",
         "fecha_cierre": null,
         "fecha_actualizacion": null,
-        "fecha_del_evento": " [Boletín SIUN 669, 7/8 de marzo de 2024] ",
-        "enlace": "Propiedad-intelectual-y-equidad-en-la-salud",
-        "subtitle": "Propiedad intelectual y equidad en la salud",
+        "fecha_del_evento": " [Boletín SIUN 674, 18/19 de abril de 2024] ",
+        "enlace": "Manizales-capacitación-diplomacia-científica-abril-2024",
+        "subtitle": "Manizales capacitación diplomacia científica abril 2024",
+        "texto_contenido_blocks": {
+            "type": "doc",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "El 23 abr. 2024 de forma presencial en el Campus La Nubia"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Fecha y hora: martes, 23 de abril de 2024, 08:00-12:00"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Lugar: Auditorio S1, Campus La Nubia, Universidad Nacional de Colombia sede Manizales, Manizales, Caldas, Colombia"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "["
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "/investigaci%C3%B3n/apoyo-a-la-investigaci%C3%B3n/internacionalizacion-estrategia",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "Consultar el documento de estrategia de internacionalización de la investigación, creación artística e innovación UNAL 2024-2034"
+                        },
+                        {
+                            "type": "text",
+                            "text": "]"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Evento presencial ["
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://forms.gle/L4qxfPJDcMK7qPrB6",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "Formulario de inscripción"
+                        },
+                        {
+                            "type": "text",
+                            "text": "]"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "La Vicerrectoría de Investigación no tiene más información acerca de esta actividad distinta a la publicada en los enlaces de esta nota."
+                        }
+                    ]
+                }
+            ]
+        },
         "enlaces_imagenes": [
-            "https://lh3.googleusercontent.com/HseSF_TEcsYg3HtHLNrxxyrC5vmh1gnTiMs1QpDm2Rm3Zsc7bJ9NoH5k652GkCXekNeQfTZhWNEcxG8Gxz2fEgd8bHccZynnf_QGw3ouaU3YZ01R2MOjzRlv74eLSVu9Wg=w1280"
+            "https://lh6.googleusercontent.com/_DF2uEvThaUE-W953Gw0ttez7iDHu1ub2-on-0ggM61qsJw-QoCh1VzbaYTciAQOXHlAy8XIVJe6SHeEpge0h1H7gtgCO7NtTFEgYARstMYqC-td9FxhQzuqM6bV6pS8jw=w1280"
         ],
         "images": [
-            "imagenes/Propiedad-intelectual-y-equidad-en-la-salud_0.jpeg"
+            "imagenes/Manizales-capacitación-diplomacia-científica-abril-2024_0.jpeg"
         ]
     },
     {
-        "texto_contenido": " Este programa financia [ayudas para realizar estudios de Máster Universitario en la Universidad Carlos III de Madrid](https://auip.org/es/becas-auip/2712) durante el curso académico 2023/2024 a titulados universitarios no españoles egresados de universidades latinoamericanas asociadas a la AUIP (Asociación Universitaria Iberoamericana de Postgrado, [la UNAL forma parte de esta entidad](https://auip.org/es/instituciones-asociadas?view=article&id=374:colombia&catid=258)).\n\nBeneficios\n----------\n\n* + Una ayuda de matrícula por el porcentaje del importe de los créditos ECTS de las asignaturas que el estudiante matricula por primera vez, con un máximo de 60 ECTS. La ayuda no incluye seguros, cargos ni otras tasas asociadas a la matrícula. El importe de la ayuda de la matrícula se regulariza en el recibo de pago de la matrícula del becario.\n\t+ Una bolsa o ayuda de estudios de 1500 euros, a excepción del Máster Universitario en Bibliotecas, Archivos y Continuidad Digital que se cursará en modalidad virtual.\n\nNúmero de plazas convocadas: 14\n\nCierre: martes, 30 de abril de 2024\n\nMás información: [convocatoria en el portal de la AUIP](https://auip.org/es/becas-auip/2712)\n\n La Vicerrectoría de Investigación no tiene más información acerca de esta convocatoria distinta a la publicada en los enlaces de esta nota.",
-        "shortDescription": " Este programa financia [ayudas para realizar estudios de Máster Universitario en la Universidad Carlos III de Madrid](https://auip.org/es/becas-auip/",
-        "title": "Becas para realizar Estudios de Máster Universitario en la Universidad Carlos III 2024 (AUIP)",
-        "fecha": " 2024/01/19 / Boletín SIUN, Vicerrectoría de Investigación, UNAL",
-        "fecha_cierre": " Cierre: 30 abr. 2024",
+        "texto_contenido": " El International Cooperation and Development Fund de Taiwán (TaiwanICDF) ofrece becas de educación superior y ha desarrollado programas de licenciatura, posgrado y doctorado en cooperación con universidades asociadas de renombre en Taiwán.\n\nEl TaiwanICDF ha establecido la Alianza de Cooperación Internacional de Taiwán (TICA) con 23 universidades socias, creando una plataforma operativa en el marco de esta TICA para gestionar y mejorar el programa de becas. En 2024, se ofrecen 29 programas para solicitar la Beca TaiwanICDF. \n\nPerfil del solicitante\n----------------------\n\n* Ser colombiano y graduado de universidad, demostrar buena conducta y buen rendimiento académico con un promedio ponderado de mínimo 3,5 puntos, tener un nivel de inglés con certificado equivalente a TOEFL iBT 75 puntos como mínimo.\n* No tener nacionalidad de la República de China (Taiwán).\n* Cumplir con los requisitos del programa universitario al que se postula.\n* No estar recibiendo simultáneamente otra beca patrocinada por el Gobierno de la República de China (Taiwán).\n* Si ha sido beneficiado de becas de TaiwanICDF, MOFA (Ministerio de Relaciones Exteriores) o MOE (Ministerio de Educación) de la República de China (Taiwán), debe postular un año después de la terminación.\n* Nunca haber tenido una beca cancelada por el Gobierno, ni haber sido expulsado por las instituciones educativas de la República de China (Taiwán).\n\nLa beca contempla [22 programas de maestrías y 3 programas de doctorado](https://www.icdf.org.tw/wSite/DownloadFile?type=attach&file=f1706167688969.pdf&realname=2024+TaiwanICDF++Scholarship+Application+Guidebook+V.3.pdf).\n\nProceso de postulación\n----------------------\n\n* Diligenciar la postulación [directamente en la página web de TaiwanICDF](https://www.icdf.org.tw/wSite/ct?xItem=69338&ctNode=31566&mp=2#aC) antes del viernes, 15 de marzo de 2024 (hora de Taipéi; la diferencia horaria con Colombia es de 13 horas).\n* Entregar junto con otros documentos completos en persona con cita previa coordinada por medio del correo [sfyang@mofa.gov.tw](mailto:sfyang@mofa.gov.tw) a la Oficina Comercial de Taipéi en Colombia antes del domingo, 17 de marzo de 2024.\n* Sólo se permite postular a un programa de maestría o doctorado en la lista de los programas participantes de esta beca. Las solicitudes extras no serán válidas.\n* Debe comunicarse en paralelo con el programa de la universidad de su interés sobre los requisitos para postular a la admisión del ingreso y enviar los documentos necesarios directamente al programa de la universidad antes de su fecha límite indicada\n\nCobertura de la beca\n--------------------\n\n* Tiquetes aéreos Bogotá - Taiwán ida y regreso en clase económica y ruta directa.\n* Alojamiento durante el período de estudio.\n* Costos académicos y de matrícula.\n* Costos de libros.\n* Subsidio mensual para los gastos personales: para maestría, 15 000 TWD (aprox. 500 USD); para doctorado: 17 000 TWD (aprox. 560 USD)\n\nCierre: viernes, 15 de marzo de 2024\n\nMás Información: [comunicado de la Oficina Comercial de Taipéi en Colombia](https://www.roc-taiwan.org/co_es/post/10156.html) ([sfyang@mofa.gov.tw](mailto:sfyang@mofa.gov.tw)); [página web de la convocatoria (en inglés)](https://www.icdf.org.tw/wSite/np?ctNode=31561&mp=2); [manual instructivo de la convocatoria 2024 (en inglés)](https://www.icdf.org.tw/wSite/DownloadFile?type=attach&file=f1706167688969.pdf&realname=2024+TaiwanICDF++Scholarship+Application+Guidebook+V.3.pdf)\n\n La Vicerrectoría de Investigación no tiene más información acerca de esta convocatoria distinta a la publicada en los enlaces de esta nota.",
+        "shortDescription": " El International Cooperation and Development Fund de Taiwán (TaiwanICDF) ofrece becas de educación superior y ha desarrollado programas de licenciatu",
+        "title": "[Convocatoria] Beca para Educación Superior de TaiwanICDF 2024",
+        "fecha": " 2024/01/25 / Boletín SIUN, Vicerrectoría de Investigación, UNAL",
+        "fecha_cierre": " Cierre: 15 mar. 2024",
         "fecha_actualizacion": null,
-        "fecha_del_evento": " [Boletín SIUN 662, 18/19 de enero de 2024] ",
-        "enlace": "Becas-máster-universitario-en-la-universidad-carlos-iii-2024",
-        "subtitle": "Becas máster universitario en la universidad carlos iii 2024",
+        "fecha_del_evento": " [Boletín SIUN 663, 25/26 de enero de 2024] ",
+        "enlace": "Taiwanicdf-2024",
+        "subtitle": "Taiwanicdf 2024",
+        "texto_contenido_blocks": {
+            "type": "doc",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "El International Cooperation and Development Fund de Taiwán (TaiwanICDF) ofrece becas de educación superior y ha desarrollado programas de licenciatura, posgrado y doctorado en cooperación con universidades asociadas de renombre en Taiwán."
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "El TaiwanICDF ha establecido la Alianza de Cooperación Internacional de Taiwán (TICA) con 23 universidades socias, creando una plataforma operativa en el marco de esta TICA para gestionar y mejorar el programa de becas. En 2024, se ofrecen 29 programas para solicitar la Beca TaiwanICDF."
+                        }
+                    ]
+                },
+                {
+                    "type": "heading",
+                    "attrs": {
+                        "level": 2
+                    },
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Perfil del solicitante"
+                        }
+                    ]
+                },
+                {
+                    "type": "bullet_list",
+                    "attrs": {
+                        "tight": false
+                    },
+                    "content": [
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Ser colombiano y graduado de universidad, demostrar buena conducta y buen rendimiento académico con un promedio ponderado de mínimo 3,5 puntos, tener un nivel de inglés con certificado equivalente a TOEFL iBT 75 puntos como mínimo."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "No tener nacionalidad de la República de China (Taiwán)."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Cumplir con los requisitos del programa universitario al que se postula."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "No estar recibiendo simultáneamente otra beca patrocinada por el Gobierno de la República de China (Taiwán)."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Si ha sido beneficiado de becas de TaiwanICDF, MOFA (Ministerio de Relaciones Exteriores) o MOE (Ministerio de Educación) de la República de China (Taiwán), debe postular un año después de la terminación."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Nunca haber tenido una beca cancelada por el Gobierno, ni haber sido expulsado por las instituciones educativas de la República de China (Taiwán)."
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "La beca contempla "
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://www.icdf.org.tw/wSite/DownloadFile?type=attach&file=f1706167688969.pdf&realname=2024+TaiwanICDF++Scholarship+Application+Guidebook+V.3.pdf",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "22 programas de maestrías y 3 programas de doctorado"
+                        },
+                        {
+                            "type": "text",
+                            "text": "."
+                        }
+                    ]
+                },
+                {
+                    "type": "heading",
+                    "attrs": {
+                        "level": 2
+                    },
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Proceso de postulación"
+                        }
+                    ]
+                },
+                {
+                    "type": "bullet_list",
+                    "attrs": {
+                        "tight": false
+                    },
+                    "content": [
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Diligenciar la postulación "
+                                        },
+                                        {
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "link",
+                                                    "attrs": {
+                                                        "href": "https://www.icdf.org.tw/wSite/ct?xItem=69338&ctNode=31566&mp=2#aC",
+                                                        "title": null
+                                                    }
+                                                }
+                                            ],
+                                            "text": "directamente en la página web de TaiwanICDF"
+                                        },
+                                        {
+                                            "type": "text",
+                                            "text": " antes del viernes, 15 de marzo de 2024 (hora de Taipéi; la diferencia horaria con Colombia es de 13 horas)."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Entregar junto con otros documentos completos en persona con cita previa coordinada por medio del correo "
+                                        },
+                                        {
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "link",
+                                                    "attrs": {
+                                                        "href": "mailto:sfyang@mofa.gov.tw",
+                                                        "title": null
+                                                    }
+                                                }
+                                            ],
+                                            "text": "sfyang@mofa.gov.tw"
+                                        },
+                                        {
+                                            "type": "text",
+                                            "text": " a la Oficina Comercial de Taipéi en Colombia antes del domingo, 17 de marzo de 2024."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Sólo se permite postular a un programa de maestría o doctorado en la lista de los programas participantes de esta beca. Las solicitudes extras no serán válidas."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Debe comunicarse en paralelo con el programa de la universidad de su interés sobre los requisitos para postular a la admisión del ingreso y enviar los documentos necesarios directamente al programa de la universidad antes de su fecha límite indicada"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "heading",
+                    "attrs": {
+                        "level": 2
+                    },
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Cobertura de la beca"
+                        }
+                    ]
+                },
+                {
+                    "type": "bullet_list",
+                    "attrs": {
+                        "tight": false
+                    },
+                    "content": [
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Tiquetes aéreos Bogotá - Taiwán ida y regreso en clase económica y ruta directa."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Alojamiento durante el período de estudio."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Costos académicos y de matrícula."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Costos de libros."
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "list_item",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "Subsidio mensual para los gastos personales: para maestría, 15 000 TWD (aprox. 500 USD); para doctorado: 17 000 TWD (aprox. 560 USD)"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Cierre: viernes, 15 de marzo de 2024"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Más Información: "
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://www.roc-taiwan.org/co_es/post/10156.html",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "comunicado de la Oficina Comercial de Taipéi en Colombia"
+                        },
+                        {
+                            "type": "text",
+                            "text": " ("
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "mailto:sfyang@mofa.gov.tw",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "sfyang@mofa.gov.tw"
+                        },
+                        {
+                            "type": "text",
+                            "text": "); "
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://www.icdf.org.tw/wSite/np?ctNode=31561&mp=2",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "página web de la convocatoria (en inglés)"
+                        },
+                        {
+                            "type": "text",
+                            "text": "; "
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://www.icdf.org.tw/wSite/DownloadFile?type=attach&file=f1706167688969.pdf&realname=2024+TaiwanICDF++Scholarship+Application+Guidebook+V.3.pdf",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "manual instructivo de la convocatoria 2024 (en inglés)"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "La Vicerrectoría de Investigación no tiene más información acerca de esta convocatoria distinta a la publicada en los enlaces de esta nota."
+                        }
+                    ]
+                }
+            ]
+        },
         "enlaces_imagenes": [
-            "https://lh4.googleusercontent.com/uuva49QryWpqnT9vWGfdunVVzCy12qzKJEXR_bfgNSxy_J6cx98svU895zbPC9IVRsSJM2BBe4vkGVEEa6a1R5w=w1280"
+            "https://lh5.googleusercontent.com/RDOLO5S9SIhki4pMOX5keR8Icjmmef0akBIUGosaGG1Ik0e6a_xrlgC95qc2GAcdMeahd5C_yaxu8qKZnqGDifLjVpAPeyUq7rATug0DJahNu0dyMm8DYd5VeUC75iKQow=w1280"
         ],
         "images": [
-            "imagenes/Becas-máster-universitario-en-la-universidad-carlos-iii-2024_0.jpeg"
+            "imagenes/Taiwanicdf-2024_0.png"
         ]
     },
     {
-        "texto_contenido": " Cyted es el Programa Iberoamericano de Ciencia y Tecnología para el Desarrollo, creado por los gobiernos de los países iberoamericanos para promover la cooperación en temas de ciencia, tecnología e innovación para el desarrollo armónico de Iberoamérica.\n\nCyted logra sus objetivos a través de diferentes instrumentos de financiación que movilizan empresarios, investigadores y expertos iberoamericanos y les permiten capacitarse y generar proyectos conjuntos de investigación, desarrollo e innovación. Es así que los países que integran el Programa CYTED logran mantenerse actualizados en los más recientes avances y desarrollos científico tecnológicos.\n\nDesde su creación en 1984 han participado en el Programa más de 28 000 empresarios, investigadores y expertos iberoamericanos en áreas prioritarias del conocimiento.\n\nLas Redes Temáticas son asociaciones de grupos de investigación y desarrollo (I+D) de entidades públicas o privadas y empresas de los países miembros del Programa CYTED, cuyas actividades científicas o tecnológicas están relacionadas dentro de un ámbito común de interés y enmarcadas en una de las Áreas del Programa. Tienen como objetivo principal el intercambio de conocimientos entre grupos de I+D y la potenciación de la cooperación como método de trabajo.\n\nEstá abierta la [Convocatoria a Redes Temáticas del Programa CYTED para el año 2024](https://www.cyted.org/conteudo.php?idm=208).\n\nEl (la) coordinador(a) debe ser una persona física perteneciente a entidades de los tipos referidos a continuación y que tengan sede en alguno de los siguientes países: Andorra, Argentina, Bolivia, Brasil, Chile, Colombia, Costa Rica, Cuba, Ecuador, El Salvador, España, Guatemala, Honduras, México, Nicaragua, Panamá, Paraguay, Perú, Portugal, República Dominicana, Uruguay y Venezuela:\n\n* Centros públicos de I+D: universidades públicas, organismos públicos de investigación reconocidos como tales por la Ley o cualquier otro centro de I+D dependiente de las administraciones públicas, independientemente de su forma jurídica (consorcio, fundación, etc.), y con capacidad y actividad demostrada en acciones de I+D+I.\n* Centros privados de I+D: universidades, centros tecnológicos u otras entidades privadas con capacidad y actividad demostrada en acciones de I+D+I.\n* Empresas públicas o privadas con capacidad y actividad demostrada en acciones de I+D+I.\n\nTodas las propuestas que se presenten al amparo de la convocatoria tendrán una duración máxima de cuatro años (48 meses). Ninguna propuesta podrá solicitar más de 15 000 € para el primer año.\n\nLíneas de Investigación abiertas a Redes Temáticas (Convocatoria 2024)\n----------------------------------------------------------------------\n\n* Área 1 Agroalimentación\n* Área 2 Salud\n* Área 3 Promoción del Desarrollo Industrial\n* Área 4 Desarrollo Sostenible, Cambio Global, Ecosistemas\n* Área 5 Tecnología de la Información y Comunicaciones\n* Área 6 Ciencia y Sociedad\n* Área 7 Energía\n\nPor distintas circunstancias, incluyendo algunas dificultades que pueden haber resultado de la adopción de un nuevo modelo de presentación de propuestas, algunos países han hecho llegar a CYTED la solicitud de prorrogar la fecha límite de sumisión de candidaturas en la convocatoria CYTED 2024. En consecuencia, se ha decidido excepcionalmente prorrogar la fecha límite de presentación de candidaturas [[ver la nota en Facebook](https://www.facebook.com/CYTED/posts/pfbid023LmLLGQkjGWnfGS672DcrB1CxUodaxVr51FWbsgRXmm9U6ZRMvQhd9w6vCwBaZ48l)]\n\nCierre: viernes, 10 de mayo de 2024, 17:00 hora de Madrid (10:00 hora colombiana)\n\nMás información: [página web de la convocatoria](https://www.cyted.org/conteudo.php?idm=208); [lista de reproducción de YouTube con videos informativos](https://www.youtube.com/playlist?list=PLQJIAoL-fSxqmLzekO9Vo4fPNivkyUk0t); [proyectos@cyted.org](mailto:proyectos@cyted.org) \n\n La Vicerrectoría de Investigación no tiene más información acerca de esta actividad distinta a la publicada en los enlaces de esta nota.",
-        "shortDescription": " Cyted es el Programa Iberoamericano de Ciencia y Tecnología para el Desarrollo, creado por los gobiernos de los países iberoamericanos para promover ",
-        "title": "Convocatoria a Redes Temáticas del Programa CYTED para el año 2024",
-        "fecha": " 2024/04/24 / Boletín SIUN, Vicerrectoría de Investigación, UNAL",
-        "fecha_cierre": " Cierre: 10 may. 2024",
+        "texto_contenido": " El 5 jun. 2024 en modalidad virtual \n\n En [esta charla](https://forms.gle/RMBVieXnjjjHBTK19) los participantes aprenderán sobre el CvLAC y los tipos de producción científica y de apropiación social de CTeI pueden subirse a esta plataforma.\n\nConferencista: Ana Milena Rincón, líder del Centro de Investigación de la [Subred Norte](https://www.subrednorte.gov.co/)\n\nFecha y hora: miércoles, 5 de junio de 2024, 16:00-18:00 hora colombiana\n\nConexión a través de Google Meet [[formulario de registro](https://forms.gle/RMBVieXnjjjHBTK19)] \n\nOrganiza el Centro de Educación Continua y Permanente de la Dirección de Investigación y Extensión de la Universidad Nacional de Colombia sede Medellín\n\n La Vicerrectoría de Investigación no tiene más información acerca de esta actividad distinta a la publicada en los enlaces de esta nota.",
+        "shortDescription": " El 5 jun. 2024 en modalidad virtual \n\n En [esta charla](https://forms.gle/RMBVieXnjjjHBTK19) los participantes aprenderán sobre el CvLAC y los tipos ",
+        "title": "Charla virtual «Mejora tu CvLac o tu hoja de vida como investigador y potencia tu carrera»",
+        "fecha": " 2024/05/31 / Boletín SIUN, Vicerrectoría de Investigación, UNAL",
+        "fecha_cierre": null,
         "fecha_actualizacion": null,
-        "fecha_del_evento": " [Boletín SIUN 675, 25/26 de abril de 2024] ",
-        "enlace": "Convocatoria-cyted-2024",
-        "subtitle": "Convocatoria cyted 2024",
+        "fecha_del_evento": " [Boletín SIUN 680, 30/31 de mayo de 2024] ",
+        "enlace": "Dieunmed-charla-virtual-cvlac-junio-2024",
+        "subtitle": "Dieunmed charla virtual cvlac junio 2024",
+        "texto_contenido_blocks": {
+            "type": "doc",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "El 5 jun. 2024 en modalidad virtual"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "En "
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://forms.gle/RMBVieXnjjjHBTK19",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "esta charla"
+                        },
+                        {
+                            "type": "text",
+                            "text": " los participantes aprenderán sobre el CvLAC y los tipos de producción científica y de apropiación social de CTeI pueden subirse a esta plataforma."
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Conferencista: Ana Milena Rincón, líder del Centro de Investigación de la "
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://www.subrednorte.gov.co/",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "Subred Norte"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Fecha y hora: miércoles, 5 de junio de 2024, 16:00-18:00 hora colombiana"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Conexión a través de Google Meet ["
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://forms.gle/RMBVieXnjjjHBTK19",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "formulario de registro"
+                        },
+                        {
+                            "type": "text",
+                            "text": "]"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Organiza el Centro de Educación Continua y Permanente de la Dirección de Investigación y Extensión de la Universidad Nacional de Colombia sede Medellín"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "La Vicerrectoría de Investigación no tiene más información acerca de esta actividad distinta a la publicada en los enlaces de esta nota."
+                        }
+                    ]
+                }
+            ]
+        },
         "enlaces_imagenes": [
-            "https://lh5.googleusercontent.com/rHlIFF_6_58rKtBoLOYYikyzWY3wOCk6jxMEXriyT_wewW1ukRFoSyheJWlHjGX6wzymSfyH8kj9MmIzAe-iVtO9WN_Zs93nMxDGZwrFhoLONu9O8YNiGQf-X5qTxKh6oQ=w1280"
+            "https://lh3.googleusercontent.com/QHv2fDT51ASzB665TgpDNFA2MngDozDb37vJNgub4zXYXbOMONAo061YLrJTNZD6k-Nc2ceOJI5thxmG5FVo_96k8BlMQD6s56MnxoMw4e22LDGlNQT01s1fOAlolgmQCQ=w1280"
         ],
         "images": [
-            "imagenes/Convocatoria-cyted-2024_0.jpeg"
+            "imagenes/Dieunmed-charla-virtual-cvlac-junio-2024_0.jpeg"
         ]
     },
     {
-        "texto_contenido": " En el marco de la promoción de los estudios en Francia, la Embajada de Francia en Colombia ofrece a mujeres colombianas estudiantes en las disciplinas STEM la oportunidad de realizar una movilidad en Francia, [mediante el programa de becas «Mujeres Científicas»](https://www.ifcolombie.fr/convocatoria/beca-de-movilidad-mujeres-cientificas). \n\nLa convocatoria está abierta a estudiantes colombianas que sean:\n\n* titulares de un pregrado o de una especialización en áreas de formación STEM (Ciencias, Tecnologías, Ingenierías y Matemáticas) otorgado por una universidad colombiana, o\n* estudiantes activas de pregrado, de especialización o de máster (para máster, aún sin haber obtenido el diploma) matriculadas en áreas de formación STEM en una universidad colombiana.\n\nEl programa de becas está también abierto a las estudiantes beneficiarias de un acuerdo de doble titulación firmado entre su universidad en Colombia y una universidad francesa.\n\nLas candidatas también deberán pertenecer a los estratos sociales de 1 a 3. Las candidatas provenientes de regiones afectadas por el conflicto tendrán prioridad (presentar el certificado de la Unidad para las víctimas).\n\nLa beca «Mujeres Científicas» es una beca de manutención (alojamiento, alimentación, transporte…) que otorga el estatus de Becaria del Gobierno Francés (BGF), lo cual exonera del pago de servicio Campus France y de la solicitud de visa. El monto de la beca será de 860 euros por mes, el cual será desembolsado mensualmente a las beneficiarias a partir de su llegada a la universidad de destino. Se otorgarán becas por un periodo de uno o dos semestres académicos. La beca se prorratea según la duración real de la estancia en la institución de educación superior en Francia y se otorgará por un periodo máximo de 12 meses. Los gastos de matrícula y otros gastos adicionales (carné estudiantil, biblioteca, inscripción a actividades culturales y deportivas…) estarán a cargo de la estudiante.\n\nPara recibir el monto de la beca, la beneficiaria deberá tener, a su nombre, una cuenta bancaria activa en un banco francés y asegurarse de que permita depósitos mayores al monto mensual de la beca. Esta beca no puede ser acumulada con cualquier otra beca. En el momento de hacerse efectiva la beca, la beneficiaria no puede tener un contrato laboral en Colombia.\n\nLos procesos de postulación a la beca y al programa de máster son dos procesos independientes:  \n\n* la postulación a la beca se hace directamente con la Embajada de Francia en Colombia (mediante el [formulario en línea](https://mujerescientificas.evalandgo.com/f/117115/4pTwcZJ3aNgiZLJ9sFkZte))\n* la postulación al programa de máster se hace, según su situación:\n\n\n\t+ si se postula mediante un acuerdo de doble titulación, a través de su universidad colombiana\n\t+ si no se postula mediante un acuerdo de doble titulación, mediante la plataforma Études en France o directamente con la institución\n\nLa carta de aceptación (al final de la convocatoria) emitida por la universidad francesa será obligatoria para la atribución definitiva de la beca.\n\nLa lista completa de los requisitos y el proceso completo de postulación están [disponibles en la página de la convocatoria en el portal del Instituto Francés en Colombia](https://www.ifcolombie.fr/convocatoria/beca-de-movilidad-mujeres-cientificas).\n\nCierre: lunes, 1 de abril de 2024\n\nMás información: [página web de la convocatoria](https://www.ifcolombie.fr/convocatoria/beca-de-movilidad-mujeres-cientificas)\n\n La Vicerrectoría de Investigación no tiene más información acerca de esta convocatoria distinta a la publicada en los enlaces de esta nota.",
-        "shortDescription": " En el marco de la promoción de los estudios en Francia, la Embajada de Francia en Colombia ofrece a mujeres colombianas estudiantes en las disciplina",
-        "title": "Beca de movilidad «Mujeres científicas» 2024 (Instituto Francés, Embajada de Francia en Colombia)",
-        "fecha": " 2024/02/09 / Boletín SIUN, Vicerrectoría de Investigación, UNAL",
-        "fecha_cierre": " Cierre: 1 abr. 2024",
+        "texto_contenido": " Each year, the Romanian Government, through the Ministry of Foreign Affairs, provides [a number of scholarships to citizens from non-EU countries](https://scholarships.studyinromania.gov.ro/). Only candidates having good results in education, respectively an average of the study years, for the last graduated school, of at least 7 (seven) corresponding to the scoring system in Romania or the Good score, as the case, are eligible.\n\nFor further details regarding the eligibility conditions, please check [Programme information](https://scholarships.studyinromania.gov.ro/scholarship-about#prog).\n\nApplicants may select their study program of interest in all fields, with the exception of Medicine, Dental Medicine and Pharmacy. \n\nFor Bachelor and Master, only study programs in Romanian are available, thus promoting the Romanian language and culture. However, at PhD level, applicants can also opt for a program in English or a foreign language set by the doctoral school. \n\nA preparatory year in Romanian is also granted prior to enrolling in the study program of choice, for those not speaking Romanian. \n\nThe required documents include diplomas, transcripts, birth certificate and passport, CV – all described in the application process.\n\nApplications can be submitted [only via the online platform](https://scholarships.studyinromania.gov.ro/scholarship-create-account), between 16 January 2024 and 16 March 2024, with the selection results being announced around 15 July 2024. Upon selection, additional formalities, such as obtaining a visa, will be required.\n\nDeadline: Saturday 16 March 2024\n\nFurther information: [website of the programme (Study in Romania)](https://scholarships.studyinromania.gov.ro/) [[FAQ page](https://scholarships.studyinromania.gov.ro/scholarship-faq)]\n\n La Vicerrectoría de Investigación no tiene más información acerca de este evento distinta a la publicada en los enlaces de esta nota.",
+        "shortDescription": " Each year, the Romanian Government, through the Ministry of Foreign Affairs, provides [a number of scholarships to citizens from non-EU countries](ht",
+        "title": "Study in Romania: Ministry of Foreign Affairs Scholarships for Non-EU Citizens (2024 intake)",
+        "fecha": " 2024/02/23 / Boletín SIUN, Vicerrectoría de Investigación, UNAL",
+        "fecha_cierre": " Cierre: 16 mar. 2024",
         "fecha_actualizacion": null,
-        "fecha_del_evento": " [Boletín SIUN 665, 8/9 de febrero de 2024] ",
-        "enlace": "Beca-de-movilidad-mujeres-científicas-2024-instituto-francés",
-        "subtitle": "Beca de movilidad mujeres científicas 2024 instituto francés",
+        "fecha_del_evento": " [Boletín SIUN 667, 22/23 de febrero de 2024] ",
+        "enlace": "Becas-en-rumania-2024",
+        "subtitle": "Becas en rumania 2024",
+        "texto_contenido_blocks": {
+            "type": "doc",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Each year, the Romanian Government, through the Ministry of Foreign Affairs, provides "
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://scholarships.studyinromania.gov.ro/",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "a number of scholarships to citizens from non-EU countries"
+                        },
+                        {
+                            "type": "text",
+                            "text": ". Only candidates having good results in education, respectively an average of the study years, for the last graduated school, of at least 7 (seven) corresponding to the scoring system in Romania or the Good score, as the case, are eligible."
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "For further details regarding the eligibility conditions, please check "
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://scholarships.studyinromania.gov.ro/scholarship-about#prog",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "Programme information"
+                        },
+                        {
+                            "type": "text",
+                            "text": "."
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Applicants may select their study program of interest in all fields, with the exception of Medicine, Dental Medicine and Pharmacy."
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "For Bachelor and Master, only study programs in Romanian are available, thus promoting the Romanian language and culture. However, at PhD level, applicants can also opt for a program in English or a foreign language set by the doctoral school."
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "A preparatory year in Romanian is also granted prior to enrolling in the study program of choice, for those not speaking Romanian."
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "The required documents include diplomas, transcripts, birth certificate and passport, CV – all described in the application process."
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Applications can be submitted "
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://scholarships.studyinromania.gov.ro/scholarship-create-account",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "only via the online platform"
+                        },
+                        {
+                            "type": "text",
+                            "text": ", between 16 January 2024 and 16 March 2024, with the selection results being announced around 15 July 2024. Upon selection, additional formalities, such as obtaining a visa, will be required."
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Deadline: Saturday 16 March 2024"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Further information: "
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://scholarships.studyinromania.gov.ro/",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "website of the programme (Study in Romania)"
+                        },
+                        {
+                            "type": "text",
+                            "text": " ["
+                        },
+                        {
+                            "type": "text",
+                            "marks": [
+                                {
+                                    "type": "link",
+                                    "attrs": {
+                                        "href": "https://scholarships.studyinromania.gov.ro/scholarship-faq",
+                                        "title": null
+                                    }
+                                }
+                            ],
+                            "text": "FAQ page"
+                        },
+                        {
+                            "type": "text",
+                            "text": "]"
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "La Vicerrectoría de Investigación no tiene más información acerca de este evento distinta a la publicada en los enlaces de esta nota."
+                        }
+                    ]
+                }
+            ]
+        },
         "enlaces_imagenes": [
-            "https://lh5.googleusercontent.com/7ro_Bd23lmNWAxA7sA95larS6Xky-U5MLJdJ_7JJ5x-3nPhwOjE299jUSFK2nmpbPuJwKWH2CZQh4_CLvwCllsHhe8i5N6iUpIgKriwjU6FPqD16jVrO_2shHI6_2Z_CoQ=w1280"
+            "https://lh4.googleusercontent.com/KhYZQzuGvQyaT5I5fSevF2s0CAU_fGxLobAk5VAXX71wlQMVzHR1tsOsCc8YWS01j3f0vutNK1LawgQxvNyKDh1jPJfvFx_J0jTaEK2U0Bba1kVdcINnnsMx7J94cdoPrQ=w1280"
         ],
         "images": [
-            "imagenes/Beca-de-movilidad-mujeres-científicas-2024-instituto-francés_0.jpeg"
+            "imagenes/Becas-en-rumania-2024_0.jpeg"
         ]
     }
 ]

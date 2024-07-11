@@ -45,7 +45,7 @@ def upload_images(filenames):
 
 
 def upload_publication(publication):
-    url = 'https://web.unal.edu.co/vicerrectoria/investigacion-cms/api/publications?_locale=ES'
+    url = 'https://web.unal.edu.co/vicerrectoria/investigacion-cms/api/publications'
     # tranformar json de publicacion
     tags = get_tags_ids(publication['tags'], get_tags())
     headers = {'Content-Type': 'application/json'}
@@ -62,10 +62,12 @@ def upload_publication(publication):
         publication['texto_contenido'] = replace_images(publication['texto_contenido'], images_ids)
     # xocatenar texto_contenido con fecha actualizacion
     publication['texto_contenido'] = publication['texto_contenido'] + f'\n\n  **{publication["fecha_actualizacion"]}**' if publication['fecha_actualizacion'] else publication['texto_contenido']
+    postDescription = publication['texto_contenido_blocks']['content']
+
     data = {
         "data": {
             "Publication": {
-                "type": "Publicaciones VRI",
+                "type": "Boletín SIUN",
                 "outstanding": False,
                 "tags_posts": {
                     "connect": tags
@@ -74,11 +76,14 @@ def upload_publication(publication):
                 "title": publication['title'],
                 "shortDescription": publication['shortDescription'],
                 "subtitle": publication['subtitle'],
-                "fullDescription": publication['texto_contenido']
+                "postDescription": [postDescription]
             },
             "locale": "es"
         }
     }
+    print('url:', url)
+    print('headers:', headers)
+    print('data:', json.dumps(data))
     response = requests.post(url, headers=headers, data=json.dumps(data))
     return response.json()
 
@@ -94,7 +99,7 @@ def cargar_noticias_json() -> List[dict]:
 
 
 def get_tag(item):
-    return item['id'],item['label'].lower()
+    return item['id'], item['label'].lower()
 
 
 def get_tags():
