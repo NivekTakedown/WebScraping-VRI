@@ -62,8 +62,7 @@ def upload_publication(publication):
         publication['texto_contenido'] = replace_images(publication['texto_contenido'], images_ids)
     # xocatenar texto_contenido con fecha actualizacion
     publication['texto_contenido'] = publication['texto_contenido'] + f'\n\n  **{publication["fecha_actualizacion"]}**' if publication['fecha_actualizacion'] else publication['texto_contenido']
-    postDescription = publication['texto_contenido_blocks']['content']
-
+    postDescription = publication['texto_contenido_blocks']['postDescription']
     data = {
         "data": {
             "Publication": {
@@ -76,15 +75,13 @@ def upload_publication(publication):
                 "title": publication['title'],
                 "shortDescription": publication['shortDescription'],
                 "subtitle": publication['subtitle'],
-                "postDescription": [postDescription]
-            },
-            "locale": "es"
+                "postDescription": postDescription
+            }
         }
     }
-    print('url:', url)
-    print('headers:', headers)
     print('data:', json.dumps(data))
     response = requests.post(url, headers=headers, data=json.dumps(data))
+    print(response.text)
     return response.json()
 
 

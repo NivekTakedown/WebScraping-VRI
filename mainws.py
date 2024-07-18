@@ -2,6 +2,7 @@ import json
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from typing import List, Tuple, Optional
 import matplotlib.pyplot as plt
 import nltk
@@ -16,6 +17,10 @@ from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import aiohttp
 import asyncio
+
+from bs4 import BeautifulSoup
+import markdown
+import json
 
 
 # Descargar recursos de NLTK
@@ -112,6 +117,82 @@ async def download_image(session, url, filename):
     return filename
 
 
+def markdown_to_json_blocks(markdown_content: str) -> dict:
+    # Convertir Markdown a HTML
+    html_content = markdown.markdown(markdown_content)
+    # Analizar el HTML y convertirlo a bloques JSON
+    soup = BeautifulSoup(html_content, 'html.parser')
+    post_description = convert_html_to_json_blocks(soup)
+    return {"postDescription": post_description}
+
+
+def convert_html_to_json_blocks(soup):
+    def convert_node_to_block(node):
+        if node.name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+            level = int(node.name[1])
+            return {
+                "type": "heading",
+                "children": [{"text": node.get_text(), "type": "text"}],
+                "level": level,
+                "size": f"h{level}"
+            }
+        elif node.name == 'p':
+            children = []
+            for child in node.children:
+                if child.name == 'b':
+                    children.append({"bold": True, "text": child.get_text(), "type": "text"})
+                elif child.name == 'i':
+                    children.append({"italic": True, "text": child.get_text(), "type": "text"})
+                elif child.name == 'a':
+                    children.append({
+                        "url": child.get('href'),
+                        "type": "link",
+                        "children": [{"text": child.get_text(), "type": "text"}]
+                    })
+                else:
+                    children.append({"text": child.string or "", "type": "text"})
+            return {"type": "paragraph", "children": children}
+        elif node.name == 'ul':
+            return {
+                "type": "list",
+                "format": "unordered",
+                "children": [{"type": "list-item", "children": [{"text": li.get_text(), "type": "text"}]} for li in node.find_all('li', recursive=False)]
+            }
+        elif node.name == 'ol':
+            return {
+                "type": "list",
+                "format": "ordered",
+                "children": [{"type": "list-item", "children": [{"text": li.get_text(), "type": "text"}]} for li in node.find_all('li', recursive=False)]
+            }
+        elif node.name == 'img':
+            src = node.get('src', '')
+            return {
+                "type": "image",
+                "image": {
+                    "ext": src.split('.')[-1] if '.' in src else '',
+                    "url": src,
+                    "hash": src.split('/')[-1].split('.')[0] if '/' in src else '',
+                    "mime": f"image/{src.split('.')[-1]}" if '.' in src else '',
+                    "name": src.split('/')[-1] if '/' in src else '',
+                    "size": 0,  # Tamaño de la imagen en KB, ajustar si es necesario
+                    "width": node.get('width'),
+                    "height": node.get('height'),
+                    "caption": node.get('alt'),
+                    "formats": {},  # Información de formatos, si se requiere
+                    "provider": "local",
+                    "createdAt": datetime.now().isoformat(),
+                    "updatedAt": datetime.now().isoformat(),
+                    "previewUrl": None,
+                    "alternativeText": node.get('alt'),
+                    "provider_metadata": None
+                },
+                "children": [{"text": "", "type": "text"}]
+            }
+        return None
+
+    return [block for node in soup.children if (block := convert_node_to_block(node)) is not None]
+
+
 class NoticiasExtractor:
     def __init__(self, session):
         self.session = session
@@ -144,10 +225,12 @@ class NoticiasExtractor:
         print(f"Enlaces de imágenes: {enlaces_imagenes} \n")
         #print(f"Enlaces de otros: {enlaces_otros} \n")
         return enlaces_imagenes, enlaces_otros
+    
+    
 
     async def bajar_texto_noticias(self, enlaces: List[str]) -> List[dict]:
         noticias_lista = []
-        enlaces = enlaces[:1]  # Limitar la cantidad de enlaces para pruebas
+        enlaces = enlaces[:3]  # Limitar la cantidad de enlaces para pruebas
         async with aiohttp.ClientSession() as session:
             for enlace in enlaces:
                 print(f"Enlace: {enlace}")
@@ -210,7 +293,7 @@ class NoticiasExtractor:
                         noticias_info['enlace'] = enlace.rsplit('/', 1)[1].capitalize()
                         noticias_info['subtitle'] = enlace.rsplit('/', 1)[1].replace('-', ' ').capitalize()
                         #noticias_info['texto_contenido'] = noticias_info['texto_contenido'].replace('\n','&nbsp')
-                        noticias_info['texto_contenido_blocks'] = await send_content_as_post_request(noticias_info['texto_contenido'])
+                        noticias_info['texto_contenido_blocks'] = markdown_to_json_blocks(noticias_info['texto_contenido'])
                         #noticias_info['shortDescription'] = noticias_info['shortDescription'].replace('\n','&nbsp')
                     else:
                         noticias_info['texto_contenido'] = None
