@@ -1,6 +1,4 @@
 import json
-import re
-import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from typing import List, Tuple, Optional
@@ -17,11 +15,11 @@ from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import aiohttp
 import asyncio
-
+import markdown2
+from PIL import Image
 from bs4 import BeautifulSoup
-import markdown
 import json
-
+import os
 
 # Descargar recursos de NLTK
 nltk.download('punkt')
@@ -83,7 +81,7 @@ STOPWORDS_LUGARES = [
 
 
 def get_tag(item):
-    return item['id'],item['label'].lower()
+    return item['id'], item['label'].lower()
 
 
 def get_tags():
@@ -98,15 +96,38 @@ def get_tags():
 
 async def download_images(noticias):
     filenames = []
+    json_objects = []
     async with aiohttp.ClientSession() as session:
         for noticia in noticias:
             if noticia['enlaces_imagenes']:
                 for i, url in enumerate(noticia['enlaces_imagenes']):
                     filename = f'{noticia["enlace"]}_{i}.'
                     filename = await download_image(session, url, filename)
+                    filename2 = filename
                     filenames.append(filename)
+
+                    # Obtener atributos de la imagen
+                    size, width, height = get_image_attributes(filename)
+                    # Crear objeto JSON
+                    json_object = {
+                        "name": "-aOBQB84e4LlZj-NeQMzIU1wiR0gj5hPL_JAVQKS_LkJQ9EZMMM7PjvNLvdwkWaI_fbxbCtidcy7qjk4yZoOjE-LEP9LfHOUPqA5zYdzOf1iO-qKJNWnsKpL_OgFIC5qXA=w1280",
+                        "size": size,
+                        "width": width,
+                        "height": height,
+                        "filename": filename2,
+                        "url": url
+                    }
+                    json_objects.append(json_object)
+
                     await asyncio.sleep(0.1)
-    return filenames
+    return filenames, json_objects
+
+
+def get_image_attributes(filename):
+    with Image.open(filename) as img:
+        size = os.path.getsize(filename)
+        width, height = img.size
+    return size, width, height
 
 
 async def download_image(session, url, filename):
@@ -119,7 +140,8 @@ async def download_image(session, url, filename):
 
 def markdown_to_json_blocks(markdown_content: str) -> dict:
     # Convertir Markdown a HTML
-    html_content = markdown.markdown(markdown_content)
+    html_content = markdown2.markdown(markdown_content)
+    print(html_content)
     # Analizar el HTML y convertirlo a bloques JSON
     soup = BeautifulSoup(html_content, 'html.parser')
     post_description = convert_html_to_json_blocks(soup)
@@ -138,7 +160,7 @@ def convert_html_to_json_blocks(soup):
             }
         elif node.name == 'p':
             children = []
-            for child in node.children:
+            for child in node:
                 if child.name == 'b':
                     children.append({"bold": True, "text": child.get_text(), "type": "text"})
                 elif child.name == 'i':
@@ -149,6 +171,8 @@ def convert_html_to_json_blocks(soup):
                         "type": "link",
                         "children": [{"text": child.get_text(), "type": "text"}]
                     })
+                elif child.name == 'img':
+                    children.append(create_image_block(child))
                 else:
                     children.append({"text": child.string or "", "type": "text"})
             return {"type": "paragraph", "children": children}
@@ -156,41 +180,52 @@ def convert_html_to_json_blocks(soup):
             return {
                 "type": "list",
                 "format": "unordered",
-                "children": [{"type": "list-item", "children": [{"text": li.get_text(), "type": "text"}]} for li in node.find_all('li', recursive=False)]
+                "children": [{"type": "list-item", "children": [{"text": li.get_text(), "type": "text"}]} for li in
+                             node.find_all('li', recursive=False)]
             }
         elif node.name == 'ol':
             return {
                 "type": "list",
                 "format": "ordered",
-                "children": [{"type": "list-item", "children": [{"text": li.get_text(), "type": "text"}]} for li in node.find_all('li', recursive=False)]
+                "children": [{"type": "list-item", "children": [{"text": li.get_text(), "type": "text"}]} for li in
+                             node.find_all('li', recursive=False)]
             }
         elif node.name == 'img':
-            src = node.get('src', '')
-            return {
-                "type": "image",
-                "image": {
-                    "ext": src.split('.')[-1] if '.' in src else '',
-                    "url": src,
-                    "hash": src.split('/')[-1].split('.')[0] if '/' in src else '',
-                    "mime": f"image/{src.split('.')[-1]}" if '.' in src else '',
-                    "name": src.split('/')[-1] if '/' in src else '',
-                    "size": 0,  # Tamaño de la imagen en KB, ajustar si es necesario
-                    "width": node.get('width'),
-                    "height": node.get('height'),
-                    "caption": node.get('alt'),
-                    "formats": {},  # Información de formatos, si se requiere
-                    "provider": "local",
-                    "createdAt": datetime.now().isoformat(),
-                    "updatedAt": datetime.now().isoformat(),
-                    "previewUrl": None,
-                    "alternativeText": node.get('alt'),
-                    "provider_metadata": None
-                },
-                "children": [{"text": "", "type": "text"}]
-            }
+            return create_image_block(node)
         return None
 
-    return [block for node in soup.children if (block := convert_node_to_block(node)) is not None]
+    def create_image_block(img_node):
+        src = img_node.get('src', '')
+        return {
+            "type": "image",
+            "image": {
+                "ext": src.split('.')[-1] if '.' in src else '',
+                "url": src,
+                "hash": src.split('/')[-1].split('.')[0] if '/' in src else '',
+                "mime": f"image/{src.split('.')[-1]}" if '.' in src else '',
+                "name": src.split('/')[-1] if '/' in src else '',
+                "size": 0,  # Tamaño de la imagen en KB, ajustar si es necesario
+                "width": img_node.get('width'),
+                "height": img_node.get('height'),
+                "caption": img_node.get('alt'),
+                "formats": {},  # Información de formatos, si se requiere
+                "provider": "local",
+                "createdAt": datetime.now().isoformat(),
+                "updatedAt": datetime.now().isoformat(),
+                "previewUrl": None,
+                "alternativeText": img_node.get('alt'),
+                "provider_metadata": None
+            },
+            "children": [{"text": "", "type": "text"}]
+        }
+
+    blocks = []
+    for node in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ul', 'ol', 'img']):
+        block = convert_node_to_block(node)
+        if block:
+            blocks.append(block)
+
+    return blocks
 
 
 class NoticiasExtractor:
@@ -208,7 +243,7 @@ class NoticiasExtractor:
                 enlaces_filtrados = [
                     enlace['href'] for enlace in enlaces
                     if '/investigación/apoyo-a-la-investigación/boletín-siun' in enlace['href']
-                    and len(enlace['href']) > 56
+                       and len(enlace['href']) > 56
                 ]
                 return enlaces_filtrados
         except aiohttp.ClientError as e:
@@ -223,10 +258,8 @@ class NoticiasExtractor:
         enlaces_imagenes = [img['src'] for elemento in elementos for img in elemento.find_all('img')]
         enlaces_otros = [a['href'] for elemento in elementos for a in elemento.find_all('a') if 'http' in a['href']]
         print(f"Enlaces de imágenes: {enlaces_imagenes} \n")
-        #print(f"Enlaces de otros: {enlaces_otros} \n")
+        # print(f"Enlaces de otros: {enlaces_otros} \n")
         return enlaces_imagenes, enlaces_otros
-    
-    
 
     async def bajar_texto_noticias(self, enlaces: List[str]) -> List[dict]:
         noticias_lista = []
@@ -248,27 +281,30 @@ class NoticiasExtractor:
                             return texto
                         return None
 
-                    def extraer_fecha(texto: str, patron_fecha: str) -> str:
-                        fechas = re.findall(patron_fecha, texto)
-                        return fechas[0] if fechas else None
-
                     def buscar_substring(texto: str, subcadena: str) -> bool:
                         return texto.startswith(subcadena)
-                    
-                    async def send_content_as_post_request(content):
-                        url = 'http://localhost:3000/process_html'
-                        headers = {'Content-Type': 'text/html'}
-                        async with aiohttp.ClientSession() as session:
-                            async with session.post(url, data=content, headers=headers) as response:
-                                return await response.json()
+
+                    def getContent():
+                        main_content = soup.find(id="content")
+                        if not main_content:
+                            main_content = soup.body
+                        if main_content:
+                            for header in main_content.find_all(['header', 'nav']):
+                                header.decompose()
+                            for footer in main_content.find_all('footer'):
+                                footer.decompose()
+                        return str(main_content)
 
                     texto_completo = agregar_info("tyJCtd mGzaTb Depvyb baZpAe")
                     if texto_completo:
                         texto_completo_md = md(texto_completo).split('\n\n', 1)
                         titulo = texto_completo_md[0]
-                        texto_completo_md = texto_completo_md[1].split('\n\n Te invitamos a consultar nuestras redes sociales')[0].split("Investigación, UNAL\n\n")[1]
+                        texto_completo_md = \
+                            texto_completo_md[1].split('\n\n Te invitamos a consultar nuestras redes sociales')[
+                                0].split(
+                                "Investigación, UNAL\n\n")[1]
                         fecha_actualizacion = None
-                        
+
                         if buscar_substring(texto_completo_md, " Nota actualizada el "):
                             texto_completo_md = texto_completo_md.split('\n\n', 1)
                             fecha_actualizacion = texto_completo_md[0]
@@ -283,18 +319,19 @@ class NoticiasExtractor:
                         fecha_evento = texto_completo_md[1]
                         texto_completo_md = texto_completo_md[0]
                         noticias_info['texto_contenido'] = texto_completo_md
-                        
+
                         noticias_info['shortDescription'] = texto_completo_md[:150]
                         noticias_info['title'] = titulo
                         noticias_info['fecha'] = md(texto_completo).split('\n\n', 2)[1]
                         noticias_info['fecha_cierre'] = fecha_cierre if fecha_cierre else None
-                        noticias_info['fecha_actualizacion'] = f"Nota actualizada el {fecha_actualizacion}" if fecha_actualizacion else None
+                        noticias_info[
+                            'fecha_actualizacion'] = f"Nota actualizada el {fecha_actualizacion}" if fecha_actualizacion else None
                         noticias_info['fecha_del_evento'] = fecha_evento if fecha_evento else None
                         noticias_info['enlace'] = enlace.rsplit('/', 1)[1].capitalize()
                         noticias_info['subtitle'] = enlace.rsplit('/', 1)[1].replace('-', ' ').capitalize()
-                        #noticias_info['texto_contenido'] = noticias_info['texto_contenido'].replace('\n','&nbsp')
-                        noticias_info['texto_contenido_blocks'] = markdown_to_json_blocks(noticias_info['texto_contenido'])
-                        #noticias_info['shortDescription'] = noticias_info['shortDescription'].replace('\n','&nbsp')
+                        # noticias_info['texto_contenido'] = noticias_info['texto_contenido'].replace('\n','&nbsp')
+                        noticias_info['texto_contenido_blocks'] = markdown_to_json_blocks(md(getContent()))
+                        # noticias_info['shortDescription'] = noticias_info['shortDescription'].replace('\n','&nbsp')
                     else:
                         noticias_info['texto_contenido'] = None
                         noticias_info['titulo'] = None
@@ -403,13 +440,14 @@ async def main():
     noticias = JSONHandler.cargar_noticias_json()
     all_texts = [noticia['texto_contenido'] for noticia in noticias]
 
-    palabras_frecuentes = list(map(lambda x: [x[1],x[0]], get_tags()))
+    palabras_frecuentes = list(map(lambda x: [x[1], x[0]], get_tags()))
     noticias_categorizadas = AnalizadorTextos.categorizar_noticias(noticias, palabras_frecuentes)
 
     with open('noticias_categorizadas.json', 'w', encoding='utf-8') as f:
         json.dump(noticias_categorizadas, f, ensure_ascii=False, indent=4)
 
     print(palabras_frecuentes)
+
 
 if __name__ == '__main__':
     asyncio.run(main())
