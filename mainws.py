@@ -115,6 +115,7 @@ async def download_images(noticias):
                         "width": width,
                         "height": height,
                         "filename": filename,
+                        'path': path,
                         "url": url
                     }
                     json_objects.append(json_object)
@@ -132,7 +133,7 @@ def get_image_attributes(filename):
 
 async def download_image(session, url, filename):
     async with session.get(url) as response:
-        filename_ = filename + response.headers['Content-Type'].split('/')[-1]
+        filename_ ='https://web.unal.edu.co/vicerrectoria/investigacion-cms/backend/uploads/' +filename + response.headers['Content-Type'].split('/')[-1]
         filename = 'imagenes/' + filename + response.headers['Content-Type'].split('/')[-1]
         with open(filename, 'wb') as f:
             f.write(await response.read())
@@ -162,6 +163,7 @@ def convert_html_to_json_blocks(soup, images_info):
         elif node.name == 'p':
             children = []
             for child in node:
+                convert_node_to_block(child)
                 if child.name == 'b':
                     children.append({"bold": True, "text": child.get_text(), "type": "text"})
                 elif child.name == 'i':
@@ -172,8 +174,6 @@ def convert_html_to_json_blocks(soup, images_info):
                         "type": "link",
                         "children": [{"text": child.get_text(), "type": "text"}]
                     })
-                elif child.name == 'img':
-                    children.append(create_image_block(child,images_info))
                 else:
                     children.append({"text": child.string or "", "type": "text"})
             return {"type": "paragraph", "children": children}
@@ -184,14 +184,18 @@ def convert_html_to_json_blocks(soup, images_info):
                 li_children = []
                 for child in li:
                     block = convert_node_to_block(child)
-                    if block:
+                    if block and block.not_empty():
                         li_children.append(block)
-                children.append({"type": "list-item", "children": li_children})
-            return {
-                "type": "list",
-                "format": list_type,
-                "children": children
-            }
+                if li_children:
+                    children.append({"type": "list-item", "children": li_children})
+            if children:
+                return {
+                    "type": "list",
+                    "format": list_type,
+                    "children": children
+                }
+            else:
+                return None
         elif node.name == 'img':
             return create_image_block(node, images_info)
         
@@ -255,13 +259,26 @@ def convert_html_to_json_blocks(soup, images_info):
                 "children": [{"text": "", "type": "text"}]
             }
             
-
+    def replace_null_children(obj):
+        if isinstance(obj, dict):
+            for key, value in obj.items():
+                if key == "children" and isinstance(value, list):
+                    obj[key] = [{"text": "", "type": "text"} if child is None else replace_null_children(child) for child in value]
+                elif isinstance(value, (dict, list)):
+                    replace_null_children(value)
+        elif isinstance(obj, list):
+            for i, item in enumerate(obj):
+                if item is None:
+                    obj[i] = {"text": "", "type": "text"}
+                else:
+                    replace_null_children(item)
+        return obj
     blocks = []
     for node in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ul', 'ol', 'img']):
         block = convert_node_to_block(node)
         if block:
             blocks.append(block)
-
+    blocks = replace_null_children(blocks)
     return blocks
 
 
@@ -360,7 +377,7 @@ class NoticiasExtractor:
                         texto_completo_md = texto_completo_md[0]
                         noticias_info['texto_contenido'] = texto_completo_md
 
-                        noticias_info['shortDescription'] = texto_completo_md[:150]
+                        
                         noticias_info['title'] = titulo
                         noticias_info['fecha'] = md(texto_completo).split('\n\n', 2)[1]
                         noticias_info['fecha_cierre'] = fecha_cierre if fecha_cierre else None
@@ -383,11 +400,8 @@ class NoticiasExtractor:
                     noticias_info['enlaces_imagenes'] = list(
                         set(enlace for enlace in enlaces_imagenes if enlace not in ENLACES_EXCLUIR))
                     noticias_info['images'] = await download_images([noticias_info])
-                    if 'images' in noticias_info and isinstance(noticias_info['images'], list) and len(noticias_info['images']) > 0:
-                        first_image = noticias_info['images'][0].get('url')
-                        if first_image and f'![]({first_image})' in texto_completo_md:
-                            texto_completo_md = texto_completo_md.split(f'{first_image})', 2)[1]
                     noticias_info['texto_contenido'] = texto_completo_md
+                    noticias_info['shortDescription'] = texto_completo_md[:150]
                     noticias_info['texto_contenido_blocks'] = markdown_to_json_blocks(texto_completo_md, noticias_info['images'])
                     noticias_lista.append(noticias_info)
                     await asyncio.sleep(0.1)
