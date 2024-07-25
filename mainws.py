@@ -20,6 +20,7 @@ from PIL import Image
 from bs4 import BeautifulSoup
 import json
 import os
+import re
 
 # Descargar recursos de NLTK
 nltk.download('punkt')
@@ -102,11 +103,11 @@ async def download_images(noticias):
             if noticia['enlaces_imagenes']:
                 for i, url in enumerate(noticia['enlaces_imagenes']):
                     filename = f'{noticia["enlace"]}_{i}.'
-                    filename = await download_image(session, url, filename)
+                    path,filename = await download_image(session, url, filename)
                     link_to_filename[url] = filename
 
                     # Obtener atributos de la imagen
-                    size, width, height = get_image_attributes(filename)
+                    size, width, height = get_image_attributes(path)
                     # Crear objeto JSON
                     json_object = {
                         "name": "-aOBQB84e4LlZj-NeQMzIU1wiR0gj5hPL_JAVQKS_LkJQ9EZMMM7PjvNLvdwkWaI_fbxbCtidcy7qjk4yZoOjE-LEP9LfHOUPqA5zYdzOf1iO-qKJNWnsKpL_OgFIC5qXA=w1280",
@@ -131,10 +132,11 @@ def get_image_attributes(filename):
 
 async def download_image(session, url, filename):
     async with session.get(url) as response:
+        filename_ = filename + response.headers['Content-Type'].split('/')[-1]
         filename = 'imagenes/' + filename + response.headers['Content-Type'].split('/')[-1]
         with open(filename, 'wb') as f:
             f.write(await response.read())
-    return filename
+    return filename,filename_
 
 
 def markdown_to_json_blocks(markdown_content: str,images_info) -> dict:
@@ -147,7 +149,7 @@ def markdown_to_json_blocks(markdown_content: str,images_info) -> dict:
     return {"postDescription": post_description}
 
 
-def convert_html_to_json_blocks(soup,images_info):
+def convert_html_to_json_blocks(soup, images_info):
     def convert_node_to_block(node):
         if node.name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
             level = int(node.name[1])
@@ -383,8 +385,9 @@ class NoticiasExtractor:
                     noticias_info['images'] = await download_images([noticias_info])
                     if 'images' in noticias_info and isinstance(noticias_info['images'], list) and len(noticias_info['images']) > 0:
                         first_image = noticias_info['images'][0].get('url')
-                        if first_image and f'{first_image})' in texto_completo_md:
+                        if first_image and f'![]({first_image})' in texto_completo_md:
                             texto_completo_md = texto_completo_md.split(f'{first_image})', 2)[1]
+                    noticias_info['texto_contenido'] = texto_completo_md
                     noticias_info['texto_contenido_blocks'] = markdown_to_json_blocks(texto_completo_md, noticias_info['images'])
                     noticias_lista.append(noticias_info)
                     await asyncio.sleep(0.1)
