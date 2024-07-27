@@ -74,7 +74,7 @@ def upload_publication(publication):
     }
     #print(json.dumps(data, indent=4))
     response = requests.post(url, headers=headers, data=json.dumps(data))
-    print(response)
+    print(response, publication['title'])
     return response.json()
 
 

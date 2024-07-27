@@ -187,86 +187,83 @@ def markdown_to_json_blocks(markdown_content: str,images_info) -> dict:
     return {"postDescription": post_description}
 
 
+from bs4 import NavigableString
+from datetime import datetime
+
+
 def convert_html_to_json_blocks(soup, images_info):
+    def convert_inline_content(node):
+        if isinstance(node, NavigableString):
+            return {"text": str(node).strip(), "type": "text"} if str(node).strip() else None
+        elif node.name == 'b' or node.name == 'strong':
+            return {"bold": True, "text": node.get_text().strip(), "type": "text"}
+        elif node.name == 'i' or node.name == 'em':
+            return {"italic": True, "text": node.get_text().strip(), "type": "text"}
+        elif node.name == 'a':
+            href = node.get('href', '')
+            text = node.get_text().strip() or "Link"
+            return {
+                "type": "link",
+                "url": href,
+                "children": [{"text": text, "type": "text"}]
+            }
+        else:
+            return {"text": node.get_text().strip(), "type": "text"}
+
     def convert_node_to_block(node):
         if node.name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
             level = int(node.name[1])
             return {
                 "type": "heading",
-                "children": [{"text": node.get_text(), "type": "text"}],
+                "children": [{"text": node.get_text().strip(), "type": "text"}],
                 "level": level,
                 "size": f"h{level}"
             }
         elif node.name == 'p':
-            children = []
-            for child in node:
-                convert_node_to_block(child)
-                if child.name == 'b':
-                    children.append({"bold": True, "text": child.get_text(), "type": "text"})
-                elif child.name == 'i':
-                    children.append({"italic": True, "text": child.get_text(), "type": "text"})
-                elif child.name == 'a':
-                    children.append({
-                        "url": child.get('href'),
-                        "type": "link",
-                        "children": [{"text": child.get_text(), "type": "text"}]
-                    })
-                else:
-                    children.append({"text": child.string or "", "type": "text"})
-            return {"type": "paragraph", "children": children}
+            children = [content for child in node.children if (content := convert_inline_content(child))]
+            return {"type": "paragraph", "children": children} if children else None
         elif node.name in ['ul', 'ol']:
             list_type = "unordered" if node.name == 'ul' else "ordered"
             children = []
             for li in node.find_all('li', recursive=False):
-                li_children = []
-                for child in li:
-                    block = convert_node_to_block(child)
-                    if block and block.get("children"):
-                        li_children.append(block)
+                li_children = [content for child in li.children if (content := convert_inline_content(child))]
                 if li_children:
-                    children.append({"type": "list-item", "children": li_children})
-            if children:
-                return {
-                    "type": "list",
-                    "format": list_type,
-                    "children": children
-                }
-            else:
-                return None
+                    children.append({
+                        "type": "list-item",
+                        "children": li_children
+                    })
+            return {
+                "type": "list",
+                "format": list_type,
+                "children": children
+            } if children else None
         elif node.name == 'img':
             return create_image_block(node, images_info)
-        
-        elif node.name == 'a':
-            return {
-                "url": node.get('href'),
-                "type": "link",
-                "children": [convert_node_to_block(child) for child in node.contents]
-            }
         return None
 
     def create_image_block(img_node, images_info):
         src = img_node.get('src', '')
         image_info = next((img for img in images_info if img['src'] == src), None)
-        
+
         if image_info:
             return {
                 "type": "image",
                 "image": {
-                    "ext": image_info['ext'],
-                    "url": image_info['url'],
-                    "hash": image_info['hash'],
-                    "mime": image_info['mime'],
-                    "name": image_info['name'],
-                    "size": image_info['size'],
-                    "width": image_info['width'],
-                    "height": image_info['height'],
-                    "caption": img_node.get('alt'),
-                    "formats": image_info['formats'],
-                    "provider": image_info['provider'],
-                    "createdAt": image_info['createdAt'],
-                    "updatedAt": image_info['updatedAt'],
+                    "ext": image_info.get('ext', ''),
+                    "url": image_info.get('url', src),
+                    "hash": image_info.get('hash', ''),
+                    "mime": image_info.get('mime', ''),
+                    "name": image_info.get('name', ''),
+                    "size": image_info.get('size', 0),
+                    "width": image_info.get('width', 0),
+                    "height": image_info.get('height', 0),
+                    "caption": img_node.get('alt', ''),
+                    "formats": image_info.get('formats', {}),
+                    "provider": image_info.get('provider', 'local'),
+                    "createdAt": image_info.get('createdAt', datetime.now().isoformat()),
+                    "updatedAt": image_info.get('updatedAt', datetime.now().isoformat()),
                     "previewUrl": None,
-                    "alternativeText": img_node.get('alt'),
+                    "alternativeText": img_node.get('alt', ''),
                     "provider_metadata": None
                 },
                 "children": [{"text": "", "type": "text"}]
@@ -284,38 +281,23 @@ def convert_html_to_json_blocks(soup, images_info):
                     "size": 0,
                     "width": img_node.get('width'),
                     "height": img_node.get('height'),
-                    "caption": img_node.get('alt'),
+                    "caption": img_node.get('alt', ''),
                     "formats": {},
                     "provider": "local",
                     "createdAt": datetime.now().isoformat(),
                     "updatedAt": datetime.now().isoformat(),
                     "previewUrl": None,
-                    "alternativeText": img_node.get('alt'),
+                    "alternativeText": img_node.get('alt', ''),
                     "provider_metadata": None
                 },
                 "children": [{"text": "", "type": "text"}]
             }
-            
-    def replace_null_children(obj):
-        if isinstance(obj, dict):
-            for key, value in obj.items():
-                if key == "children" and isinstance(value, list):
-                    obj[key] = [{"text": "", "type": "text"} if child is None else replace_null_children(child) for child in value]
-                elif isinstance(value, (dict, list)):
-                    replace_null_children(value)
-        elif isinstance(obj, list):
-            for i, item in enumerate(obj):
-                if item is None:
-                    obj[i] = {"text": "", "type": "text"}
-                else:
-                    replace_null_children(item)
-        return obj
+
     blocks = []
     for node in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ul', 'ol', 'img']):
         block = convert_node_to_block(node)
         if block:
             blocks.append(block)
-    blocks = replace_null_children(blocks)
     return blocks
 
 
