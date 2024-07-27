@@ -94,6 +94,18 @@ def get_tags():
     tags = set(map(get_tag, data))
     return tags
 
+def upload_image(filename):
+    url = 'https://web.unal.edu.co/vicerrectoria/investigacion-cms/api/upload'
+    filename = filename['path']
+    files = {
+        "files": open(filename, 'rb')
+    }
+    response = requests.post(url, files=files)
+    return response.json()
+
+
+def upload_images(filenames):
+    return list(map(lambda x: upload_image(x), filenames))
 
 async def download_images(noticias):
     link_to_filename = {}
@@ -103,21 +115,46 @@ async def download_images(noticias):
             if noticia['enlaces_imagenes']:
                 for i, url in enumerate(noticia['enlaces_imagenes']):
                     filename = f'{noticia["enlace"]}_{i}.'
-                    path,filename = await download_image(session, url, filename)
+                    path, filename = await download_image(session, url, filename)
                     link_to_filename[url] = filename
 
-                    # Obtener atributos de la imagen
-                    size, width, height = get_image_attributes(path)
-                    # Crear objeto JSON
+                    image = upload_image({'path': path})
+
+                    image_info = image[0]
+
+                    # Extraer la información necesaria
+                    id = image_info.get('id', 0)
+                    ext = image_info.get('ext', '')
+                    url_ = f"https://web.unal.edu.co/vicerrectoria/investigacion-cms/backend/{image_info.get('url', '')}"
+                    hash_value = image_info.get('hash', '')
+                    mime = image_info.get('mime', '')
+                    name = image_info.get('name', '')
+                    size = image_info.get('size', 0)
+                    width = image_info.get('width', 0)
+                    height = image_info.get('height', 0)
+                    caption = image_info.get('caption', '')
+                    formats = image_info.get('formats', {})
+                    provider = image_info.get('provider', '')
+                    created_at = image_info.get('createdAt', '')
+                    updated_at = image_info.get('updatedAt', '')
                     json_object = {
-                        "name": "-aOBQB84e4LlZj-NeQMzIU1wiR0gj5hPL_JAVQKS_LkJQ9EZMMM7PjvNLvdwkWaI_fbxbCtidcy7qjk4yZoOjE-LEP9LfHOUPqA5zYdzOf1iO-qKJNWnsKpL_OgFIC5qXA=w1280",
+                        "id": id,
+                        "ext": ext,
+                        "url": url_,
+                        "hash": hash_value,
+                        "mime": mime,
+                        "name": name,
                         "size": size,
                         "width": width,
                         "height": height,
-                        "filename": filename,
-                        'path': path,
-                        "url": url
+                        "caption": caption,
+                        "formats": formats,
+                        "provider": provider,
+                        "createdAt": created_at,
+                        "updatedAt": updated_at,
+                        "src": url
                     }
+
                     json_objects.append(json_object)
 
                     await asyncio.sleep(0.1)
@@ -137,7 +174,7 @@ async def download_image(session, url, filename):
         filename = 'imagenes/' + filename + response.headers['Content-Type'].split('/')[-1]
         with open(filename, 'wb') as f:
             f.write(await response.read())
-    return filename,filename_
+    return filename, filename_
 
 
 def markdown_to_json_blocks(markdown_content: str,images_info) -> dict:
@@ -184,7 +221,7 @@ def convert_html_to_json_blocks(soup, images_info):
                 li_children = []
                 for child in li:
                     block = convert_node_to_block(child)
-                    if block and block.not_empty():
+                    if block and block.get("children"):
                         li_children.append(block)
                 if li_children:
                     children.append({"type": "list-item", "children": li_children})
@@ -209,25 +246,25 @@ def convert_html_to_json_blocks(soup, images_info):
 
     def create_image_block(img_node, images_info):
         src = img_node.get('src', '')
-        image_info = next((img for img in images_info if img['url'] == src), None)
+        image_info = next((img for img in images_info if img['src'] == src), None)
         
         if image_info:
             return {
                 "type": "image",
                 "image": {
-                    "ext": image_info['filename'].split('.')[-1],
-                    "url": image_info['filename'],  # Cambiado a nombre del archivo
-                    "hash": image_info['filename'].split('/')[-1].split('.')[0],
-                    "mime": f"image/{image_info['filename'].split('.')[-1]}",
-                    "name": image_info['filename'].split('/')[-1],
+                    "ext": image_info['ext'],
+                    "url": image_info['url'],
+                    "hash": image_info['hash'],
+                    "mime": image_info['mime'],
+                    "name": image_info['name'],
                     "size": image_info['size'],
                     "width": image_info['width'],
                     "height": image_info['height'],
                     "caption": img_node.get('alt'),
-                    "formats": {},
-                    "provider": "local",
-                    "createdAt": datetime.now().isoformat(),
-                    "updatedAt": datetime.now().isoformat(),
+                    "formats": image_info['formats'],
+                    "provider": image_info['provider'],
+                    "createdAt": image_info['createdAt'],
+                    "updatedAt": image_info['updatedAt'],
                     "previewUrl": None,
                     "alternativeText": img_node.get('alt'),
                     "provider_metadata": None
@@ -400,9 +437,13 @@ class NoticiasExtractor:
                     noticias_info['enlaces_imagenes'] = list(
                         set(enlace for enlace in enlaces_imagenes if enlace not in ENLACES_EXCLUIR))
                     noticias_info['images'] = await download_images([noticias_info])
-                    noticias_info['texto_contenido'] = texto_completo_md
-                    noticias_info['shortDescription'] = texto_completo_md[:150]
+                    
                     noticias_info['texto_contenido_blocks'] = markdown_to_json_blocks(texto_completo_md, noticias_info['images'])
+                    noticias_info['texto_contenido'] = texto_completo_md
+                    
+                    noticias_info['shortDescription'] = texto_completo_md[:150]
+                    texto_completo_md = re.sub(r'!\[\]\(https?://[^\s)]+\)', '', texto_completo_md)
+                    texto_completo_md = re.sub(r'\[\]\(https?://[^\s)]+\)', '', texto_completo_md)
                     noticias_lista.append(noticias_info)
                     await asyncio.sleep(0.1)
 
